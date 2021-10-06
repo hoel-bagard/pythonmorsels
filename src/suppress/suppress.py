@@ -1,11 +1,10 @@
 """Suppress exercise from python morsel."""
 
-import traceback
 from contextlib import ContextDecorator   # Class version
 from contextlib import contextmanager    # Function version
 from dataclasses import dataclass
 from types import TracebackType
-from typing import Optional
+from typing import Any, Iterator, Optional, Sized, Type
 
 
 @dataclass
@@ -17,13 +16,15 @@ class Context:
 
 
 @contextmanager
-def suppress_fn(*exceptions):
+def suppress_fn(*exception_types: Type[Exception]) -> Iterator[Context]:
     context = Context()
     try:
         yield context
-    except exceptions as e:
+    except exception_types as e:
         context.exception = e
-        context.traceback = traceback.format_exc()
+        context.traceback = e.__traceback__
+        # import traceback
+        # context.traceback = traceback.format_exc()
     # finally:
         # Code to release resource
 
@@ -31,25 +32,25 @@ def suppress_fn(*exceptions):
 class suppress(ContextDecorator):  # noqa: N801
     """Context manager that suppresses the given exceptions."""
 
-    def __init__(self, *exceptions):
-        self.exceptions = exceptions
+    def __init__(self, *exceptions_types: Type[Exception]):
+        self.exceptions_types = exceptions_types
         self.context = Context()
 
-    def __enter__(self, *exceptions):
+    def __enter__(self) -> Context:
         return self.context
 
-    def __exit__(self, *exc):
-        # if exc[0] in self.exceptions:
-        print(self.exceptions[0])
-        print(exc[0])
-        print(isinstance(exc[0], self.exceptions[0]))
-        if any([isinstance(exc[0], exception) for exception in self.exceptions]):
-            self.context.exception = exc[1]
-            self.context.traceback = exc[2]
-            return True  # Stops the exception from being propagated
+    def __exit__(self, exception_type: Type[Exception], exception: Exception, traceback: TracebackType) -> bool:
+        print(exception_type)
+        print("EEEE")
+        if isinstance(exception, self.exceptions_types):
+            self.context.exception = exception
+            self.context.traceback = traceback
+            return True
+        else:
+            return False
 
 
-def main():
+def main() -> None:
     # Main exercise
     with suppress(NameError):
         print("Hi!")
@@ -81,7 +82,7 @@ def main():
     print("\nBonus 3 prints")
 
     @suppress(TypeError)
-    def len_or_none(thing):
+    def len_or_none(thing: Sized) -> int:
         return len(thing)
     print(len_or_none("Hello"))
     print(len_or_none())

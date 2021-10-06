@@ -73,7 +73,7 @@ def main():
     print(cube.calls)
     try:
         cube(None)
-    except Exception as e:
+    except Exception:
         print(traceback.format_exc())
     print(cube.calls[-1].exception)
     print(cube.calls[-1].return_value == NO_RETURN)
