@@ -8,14 +8,12 @@ def add1(matrix1: list[list[int]], matrix2: list[list[int]]) -> list[list[int]]:
 
 def add2(*matrices: list[list[list[int]]]) -> list[list[int]]:
     res = []
-    if not all([len(matrices[0]) == len(matrix) for matrix in matrices]):
+    try:
+        for vectors in zip(*matrices, strict=True):
+            res.append([sum(numbers) for numbers in zip(*vectors, strict=True)])
+        return res
+    except ValueError:
         raise ValueError("Given matrices are not the same size.")
-    for vectors in zip(*matrices):
-        if not all([len(vectors[0]) == len(vector) for vector in vectors]):
-            raise ValueError("Given matrices are not the same size.")
-
-        res.append([sum(numbers) for numbers in zip(*vectors)])
-    return res
 
 
 def main():
