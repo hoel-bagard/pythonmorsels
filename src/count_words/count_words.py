@@ -4,7 +4,7 @@ from collections import defaultdict
 
 def count_words(sentence: str) -> dict[str, int]:
     word_list = sentence.lower().split()  # .lower() for bonus 1
-    count_dict: dict[str, int] = defaultdict(lambda: 0)
+    count_dict: dict[str, int] = defaultdict(int)
     for word in word_list:
         word = re.findall(r"\b.*\b", word)[0]   # Bonus 2 here
         count_dict[word] += 1
