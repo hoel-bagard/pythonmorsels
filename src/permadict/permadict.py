@@ -7,28 +7,23 @@ class PermaDict(UserDict):
         super().__init__(*args, **kwargs)
         self.silent = silent
 
-    def __setitem__(self, key, value, force: bool = False):
-        if key not in self.keys() or force:
+    def __setitem__(self, key, value):
+        if key not in self.keys():
             super().__setitem__(key, value)
         elif not self.silent:
             raise KeyError(f"'{key}' already in dictionary")
 
     def force_set(self, key, value):
-        self.data[key] = value
+        super().__setitem__(key, value)
 
-    def update(self, *args: Iterable[tuple[Any, Any]], force: bool = False, **kwargs):
+    def update(self,  # type: ignore[override]
+               *args: Iterable[tuple[Any, Any]],
+               force: bool = False,
+               **kwargs: Any) -> None:
         if force:
-            if args:
-                items = args[0]
-                if isinstance(items, dict):
-                    items = items.items()
-                for key, value in items:
-                    self.__setitem__(key, value, force)
-            if kwargs:
-                for key, value in kwargs.items():
-                    self.__setitem__(key, value, force)
+            return self.data.update(*args, **kwargs)
         else:
-            super().update(*args, **kwargs)
+            return super().update(*args, **kwargs)
 
 
 def main():

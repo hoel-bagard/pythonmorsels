@@ -5,7 +5,6 @@ from permadict import PermaDict
 
 
 class PermaDictTests(unittest.TestCase):
-
     """Tests for PermaDict."""
 
     def test_can_add_key(self):
@@ -95,8 +94,8 @@ class PermaDictTests(unittest.TestCase):
 
 class AllowUnexpectedSuccessRunner(unittest.TextTestRunner):
     """Custom test runner to avoid FAILED message on unexpected successes."""
-    class resultclass(unittest.TextTestResult):
-        def wasSuccessful(self):
+    class ResultClass(unittest.TextTestResult):
+        def was_successful(self):
             return not (self.failures or self.errors)
 
 
