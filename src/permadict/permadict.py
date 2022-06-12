@@ -1,5 +1,10 @@
+from __future__ import annotations
+
 from collections import UserDict
 from typing import Any, Iterable
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from _typeshed import SupportsKeysAndGetItem
 
 
 class PermaDict(UserDict):
@@ -16,8 +21,8 @@ class PermaDict(UserDict):
     def force_set(self, key, value):
         super().__setitem__(key, value)
 
-    def update(self,  # type: ignore[override]
-               *args: Iterable[tuple[Any, Any]],
+    def update(self,
+               *args: Iterable[tuple[Any, Any]] | SupportsKeysAndGetItem[Any, Any],
                force: bool = False,
                **kwargs: Any) -> None:
         if force:
