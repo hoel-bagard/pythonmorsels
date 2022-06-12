@@ -1,6 +1,6 @@
 ## PermaDict
 
-Run the python morsels tests with `python src/permadict/test_permadict.py`.
+Run the python morsels tests with `python src/permadict/test_permadict.py`.\
 Run the main file with `python src/permadict/permadict.py`.
 
 
