@@ -2,3 +2,8 @@
 
 Run the python morsels tests with `python src/grades/test_grades.py`.\
 Run the main file with `python src/grades/grades.py`.
+
+
+### Notes:
+
+Boring, boring and very boring with a boring and wrong solutions. Worse one so far.

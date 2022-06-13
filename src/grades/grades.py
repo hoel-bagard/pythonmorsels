@@ -1,13 +1,4 @@
-import math
-
-
-def my_round_fn(nb: float) -> int:
-    if nb - math.floor(nb) < 0.5:
-        return math.floor(nb)
-    return math.ceil(nb)
-
-
-def percent_to_grade(in_percentage: float, *, suffix: bool = False, round: bool = False):
+def percent_to_grade(in_percentage: float, *, suffix: bool = False, round: bool = False) -> str:
     """Convert a percentage to a grade by using a specific flavor of the A-F grading system used in the US."""
     if suffix:
         grades = ["D", "C", "B", "A"]
@@ -18,7 +9,7 @@ def percent_to_grade(in_percentage: float, *, suffix: bool = False, round: bool 
         thresholds = [percentage for percentage in range(60, 91, 10)]
         grades = ["F", "D", "C", "B", "A"]
 
-    in_percentage = my_round_fn(in_percentage) if round else in_percentage
+    in_percentage = int(in_percentage + 0.5) if round else in_percentage
 
     for i in range(len(thresholds)):
         if in_percentage < thresholds[i]:
