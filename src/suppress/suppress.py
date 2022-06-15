@@ -4,7 +4,7 @@ from contextlib import ContextDecorator   # Class version
 from contextlib import contextmanager    # Function version
 from dataclasses import dataclass
 from types import TracebackType
-from typing import Any, Iterator, Optional, Sized, Type
+from typing import Iterator, Optional, Sized, Type
 
 
 @dataclass
@@ -54,7 +54,7 @@ def main() -> None:
     # Main exercise
     with suppress(NameError):
         print("Hi!")
-        print("It's nice to meet you,", name)
+        print("It's nice to meet you,", name)  # noqa
         print("Goodbye!")
 
     # with suppress(TypeError):

@@ -56,7 +56,7 @@ if __name__ == "__main__":
     c.diameter = 4
     assert c.radius == 2, "Wrong radius"
     try:
-        c.area = 45.678
+        c.area = 45.678  # type: ignore
         raise Exception("Should have raised an AttributeError")
     except AttributeError:
         pass
@@ -71,4 +71,3 @@ if __name__ == "__main__":
         pass
 
     print("Passed the tests")
-

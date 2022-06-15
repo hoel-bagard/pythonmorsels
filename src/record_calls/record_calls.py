@@ -1,7 +1,7 @@
 import functools
 import traceback
 from dataclasses import dataclass
-from typing import Optional
+from typing import Any, Optional
 
 
 NO_RETURN = object()
@@ -9,13 +9,13 @@ NO_RETURN = object()
 
 @dataclass
 class Call:
-    args: any
-    kwargs: any
-    return_value: any = NO_RETURN
+    args: Any
+    kwargs: Any
+    return_value: Any = NO_RETURN
     exception: Optional[Exception] = None
 
 
-class record_calls:
+class record_calls:  # noqa: N801
     def __init__(self, func):
         functools.update_wrapper(self, func)
         self.func = func
@@ -34,9 +34,6 @@ class record_calls:
 
 
 def main():
-    # record_calls exercise from pythonmorsels
-    # https://www.pythonmorsels.com/exercises/3ee85ad3481f428d99458b102cbda7c6/submit/1/
-
     @record_calls
     def greet(name="world"):
         """Greet someone by their name."""
