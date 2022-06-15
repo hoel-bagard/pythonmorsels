@@ -1,48 +1,46 @@
 import atexit
-from collections import deque
-from functools import wraps
 import multiprocessing
 import sys
 import unittest
+from collections import deque
+from functools import wraps
 
 from deep_flatten import deep_flatten
 
 
 class DeepFlattenTests(unittest.TestCase):
-
     """Tests for deep_flatten."""
-
-    def assertIterableEqual(self, iterable1, iterable2):
+    def assert_iterable_equal(self, iterable1, iterable2):
         self.assertEqual(list(iterable1), list(iterable2))
 
     def test_deep_lists(self):
         inputs = [0, [1, [2, 3]], [4]]
         outputs = [0, 1, 2, 3, 4]
-        self.assertIterableEqual(deep_flatten(inputs), outputs)
+        self.assert_iterable_equal(deep_flatten(inputs), outputs)
 
     def test_tuples(self):
         inputs = (0, (1, (2, 3)), [4])
         outputs = [0, 1, 2, 3, 4]
-        self.assertIterableEqual(deep_flatten(inputs), outputs)
+        self.assert_iterable_equal(deep_flatten(inputs), outputs)
 
     def test_deep_empty_list_with_tuple(self):
-        self.assertIterableEqual(deep_flatten([[()]]), [])
+        self.assert_iterable_equal(deep_flatten([[()]]), [])
 
     # To test bonus 1, comment out the next line
-    @unittest.expectedFailure
+    # @unittest.expectedFailure
     def test_other_iterables(self):
-        self.assertIterableEqual(
+        self.assert_iterable_equal(
             deep_flatten((n, (n**3, n**2)) for n in [2, 3]),
             [2, 8, 4, 3, 27, 9],
         )
-        self.assertIterableEqual(deep_flatten([(1, 2), deque([3])]), [1, 2, 3])
-        self.assertIterableEqual(
+        self.assert_iterable_equal(deep_flatten([(1, 2), deque([3])]), [1, 2, 3])
+        self.assert_iterable_equal(
             deep_flatten(iter([n]) for n in [1, 2, 3]),
             [1, 2, 3]
         )
 
     # To test bonus 2, comment out the next line
-    @unittest.expectedFailure
+    # @unittest.expectedFailure
     def test_returns_iterator(self):
         self.assertEqual(next(deep_flatten([0, [1, [2, 3]]])), 0)
 
@@ -67,7 +65,7 @@ class DeepFlattenTests(unittest.TestCase):
         self.assertEqual(next(deep_flatten(squares)), 4)
 
     # To test bonus 3, comment out the next line
-    @unittest.expectedFailure
+    # @unittest.expectedFailure
     def test_flatten_with_strings(self):
         inputs = [
             ['cats', ['carl', 'cate']],
@@ -86,8 +84,8 @@ class DeepFlattenTests(unittest.TestCase):
 
 class AllowUnexpectedSuccessRunner(unittest.TextTestRunner):
     """Custom test runner to avoid FAILED message on unexpected successes."""
-    class resultclass(unittest.TextTestResult):
-        def wasSuccessful(self):
+    class ResultClass(unittest.TextTestResult):
+        def was_successful(self):
             return not (self.failures or self.errors)
 
 
@@ -140,7 +138,6 @@ def list_deep_flatten(*args, **kwargs):
 
 if __name__ == "__main__":
     from platform import python_version
-    import sys
     if sys.version_info < (3, 6):
         sys.exit("Running {}.  Python 3.6 required.".format(python_version()))
     unittest.main(verbosity=2, testRunner=AllowUnexpectedSuccessRunner)

@@ -2,16 +2,16 @@ from typing import Iterable, TypeVar
 T = TypeVar('T')
 
 
-def deep_flatten_g(my_input) -> Iterable[T]:
+def deep_flatten(my_input) -> Iterable:
     for item in my_input:
-        if isinstance(item, Iterable):
+        if isinstance(item, Iterable) and not isinstance(item, str):
             yield from deep_flatten(item)
         else:
             yield item
 
 
-def deep_flatten(iterable):
-    return list(deep_flatten_g(iterable))
+def deep_flatten_list(iterable):
+    return list(deep_flatten(iterable))
 
 
 def test_equal(res, expected_res):
@@ -20,8 +20,8 @@ def test_equal(res, expected_res):
 
 def main():
     # Base exercise:
-    test_equal(deep_flatten([[(1, 2), (3, 4)], [(5, 6), (7, 8)]]), [1, 2, 3, 4, 5, 6, 7, 8])
-    test_equal(deep_flatten([[1, [2, 3]], 4, 5]), [1, 2, 3, 4, 5])
+    test_equal(deep_flatten_list([[(1, 2), (3, 4)], [(5, 6), (7, 8)]]), [1, 2, 3, 4, 5, 6, 7, 8])
+    test_equal(deep_flatten_list([[1, [2, 3]], 4, 5]), [1, 2, 3, 4, 5])
 
     # Bonus 1
     # Make sure your deep_flatten function accepts not just lists and tuples, but generators, sets,
@@ -30,12 +30,10 @@ def main():
 
     # Bonus 2
     # For the second bonus, I'd like you to make deep_flatten return an iterator that loops over input lazily.
-
     numbers_and_words = enumerate([99, 98, 97])
     flattened = deep_flatten(numbers_and_words)
     test_equal(next(flattened), 0)
     test_equal(next(flattened), 99)
-    test_equal(next(numbers_and_words), (1, 98))
 
     # Bonus 3
     # For the third bonus, I'd like you to make sure deep_flatten works with strings:
