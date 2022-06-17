@@ -4,32 +4,36 @@ from typing import Optional, TypeVar
 TFloatRange = TypeVar("TFloatRange", bound="float_range")
 
 
-def sign(x: float):
-    return 1 if x >= 0 else -1
-
-
 class float_range:  # noqa: N801
-    def __init__(self, start: float, stop: Optional[float] = None, step: float = 1.):
+    def __init__(self, start: float, stop: Optional[float] = None, step: float = 1):
         self.start = start if stop is not None else 0
         self.stop = stop if stop is not None else start
         self.step = step
         self.current = self.start
+        self.step_sign = 1 if step >= 0 else -1
+        self.is_ascending = self.stop - self.start > 0
 
     def __getitem__(self, key: int | slice):
-        # Wanted to use match/case here but too soon for mypy =(
         if isinstance(key, int):
-            start = self.start if key >= 0 else self.start + len(self)*self.step
-            if (result := start + key*self.step) < self.stop:
+            if key >= 0 and self.step_sign*(result := self.start + key*self.step) < self.stop:
+                return result
+            elif key < 0 and self.start <= self.step_sign*(result := self.start + len(self)*self.step + key*self.step):
                 return result
             raise IndexError("float_range index out of range")
         elif isinstance(key, slice):
-            start = self[key.start] if key.start is not None else self.start
+            if key.start is not None:
+                start = self[key.start] if abs(key.start) < len(self) else self.stop
+            else:
+                start = self.start
             stop = self[key.stop] if key.stop is not None and key.stop < len(self) else self.stop
             step = key.step * self.step if key.step is not None else self.step
+            print((start, stop, step))
             return float_range(start, stop, step)
 
     def __iter__(self):
-        while sign(self.step) * self.current < self.stop:
+        while (((self.is_ascending and self.current < self.stop)
+                or (not self.is_ascending and self.stop < self.current))
+                and self.step_sign*(self.stop - self.start) > 0):
             yield self.current
             self.current += self.step
         self.current = self.start
@@ -39,6 +43,10 @@ class float_range:  # noqa: N801
 
     def __eq__(self, other: object):
         if isinstance(other, float_range | range):
+            if len(self) == len(other) == 0:
+                return True
+            elif len(self) == len(other) == 1:
+                return self.start == other.start
             return (self.start == other.start
                     and self.step == other.step
                     and len(self) == len(other))
