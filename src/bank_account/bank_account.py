@@ -1,41 +1,42 @@
-from dataclasses import dataclass, field
 from typing import ClassVar, TypeVar
 
 TBankAccount = TypeVar("TBankAccount", bound="BankAccount")
 
 
-@dataclass
 class BankAccount:
     next_id: ClassVar[int] = 1000
     accounts: ClassVar[list] = []
-    balance: float = 0
-    number: int = field(init=False)
 
-    def __post_init__(self):
-        if self.balance < 0:
-            raise ValueError(f"Cannot open account with {self.balance} balance")
+    def __init__(self, balance: float = 0):
+        if balance < 0:
+            raise ValueError(f"Cannot open account with {balance} balance")
+        self._balance = balance
         self.number = BankAccount.next_id
         BankAccount.next_id += 1
         BankAccount.accounts.append(self)
 
+    @property
+    def balance(self):
+        return self._balance
+
     def deposit(self, amount: float):
         if amount < 0:
             raise ValueError(f"Cannot deposit {amount}")
-        self.balance += amount
+        self._balance += amount
 
     def withdraw(self, amount: float):
         if amount < 0:
             raise ValueError(f"Can't withdraw {amount}")
         if self.balance - amount < 0:
             raise ValueError(f"Can't withdraw {amount} with {self.balance} balance")
-        self.balance -= amount
+        self._balance -= amount
 
     def transfer(self, other: TBankAccount, amount: float):
         self.withdraw(amount)
         other.deposit(amount)
 
-    # def __repr__(self):
-    #     return f"{type(self).__name__}({self.balance})"
+    def __repr__(self):
+        return f"{type(self).__name__}(balance={self.balance})"
 
 
 def test_equal(res, expected_res):
@@ -96,6 +97,19 @@ def main():
     test_equal(account2.number, 1005)
     account3 = BankAccount(50)
     test_equal(account3.number, 1006)
+
+    # Bonus 3
+    account1 = BankAccount(100)
+    test_equal(account1.balance, 100)
+    try:
+        account1.balance = 500
+        raise Exception("Should have raised an AttributeError but did not.")
+    except AttributeError:
+        pass
+    test_equal(account1.balance, 100)
+    account1.deposit(400)
+    test_equal(account1.balance, 500)
+
     print("Passed tests!")
 
 

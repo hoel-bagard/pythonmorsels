@@ -4,7 +4,6 @@ from bank_account import BankAccount
 
 
 class BankAccountTests(unittest.TestCase):
-
     """Tests for BankAccount."""
 
     def test_new_account_balance_default(self):
@@ -42,7 +41,7 @@ class BankAccountTests(unittest.TestCase):
         self.assertEqual(dana_account.balance, 20)
 
     # To test bonus 1, comment out the next line
-    @unittest.expectedFailure
+    # @unittest.expectedFailure
     def test_deposit_and_withdraw_validation(self):
         mary_account = BankAccount(balance=100)
         # Can't start with negative balance
@@ -89,7 +88,7 @@ class BankAccountTests(unittest.TestCase):
         self.assertEqual(dana_account.balance, 90)
 
     # To test bonus 2, comment out the next line
-    @unittest.expectedFailure
+    # @unittest.expectedFailure
     def test_account_number_and_accounts_registry(self):
         # Re-import the BankAccount class
         import importlib
@@ -121,23 +120,23 @@ class BankAccountTests(unittest.TestCase):
         self.assertNotEqual(account2.number, account3.number)
 
     # To test bonus 3, comment out the next line
-    @unittest.expectedFailure
+    # @unittest.expectedFailure
     def test_balance_cannot_be_written(self):
         account1 = BankAccount()
         account2 = BankAccount(100)
         self.assertEqual(account1.balance, 0)
-        with self.assertRaises(Exception):
+        with self.assertRaises(Exception):  # noqa: B017
             account1.balance = 50
         self.assertEqual(account1.balance, 0)
         self.assertEqual(account2.balance, 100)
-        with self.assertRaises(Exception):
+        with self.assertRaises(Exception):  # noqa: B017
             account2.balance = 50
         self.assertEqual(account2.balance, 100)
         account1.deposit(100)
         account2.deposit(10)
         self.assertEqual(account1.balance, 100)
         self.assertEqual(account2.balance, 110)
-        with self.assertRaises(Exception):
+        with self.assertRaises(Exception):  # noqa: B017
             account2.balance = 500
         self.assertEqual(account2.balance, 110)
         account2.transfer(account1, 50)
@@ -147,8 +146,8 @@ class BankAccountTests(unittest.TestCase):
 
 class AllowUnexpectedSuccessRunner(unittest.TextTestRunner):
     """Custom test runner to avoid FAILED message on unexpected successes."""
-    class resultclass(unittest.TextTestResult):
-        def wasSuccessful(self):
+    class ResultClass(unittest.TextTestResult):
+        def was_successful(self):
             return not (self.failures or self.errors)
 
 

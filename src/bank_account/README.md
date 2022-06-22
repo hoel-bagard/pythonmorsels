@@ -15,7 +15,6 @@ The exception type should be ValueError for invalid amount scenarios above, but 
 
 Note that you don't need to worry about someone manually changing the balance attribute to a negative number (we'll address that concern in bonus 3).
 
-
 #### Bonus 2
 For the second bonus, I'd like you to assign a unique account number to each account.\
 The number does not necessarily need to be incrementing by 1 or starting at 1000, it just needs to be unique.
@@ -23,8 +22,5 @@ The number does not necessarily need to be incrementing by 1 or starting at 1000
 I'd also like you to keep track of all opened accounts in an class-level accounts attribute, as a list.\
 Note that the account number doesn't show up in the string representation of our BankAccount objects above, but you're welcome to add the account number to the string representation if you'd like.
 
-
-
-
-
-
+#### Bonus 3
+For the third bonus, I'd like you to ensure the balance attribute on your BankAccount class is a read-only attribute.
