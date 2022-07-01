@@ -1,8 +1,8 @@
 # [Bank Account](https://www.pythonmorsels.com/exercises/7b02e2aae0634dc4a6f8cec15d1e1a8a)
 
 ### My notes
-Boring exercise with fairly uninspired instructions (I would even say instructions made to induce errors). Nothing to learn for anyone even somewhat familiar with python.\
-Maybe for absolute beginners (as an exercise to introduce classes).
+Exercise a bit boring, maybe for absolute beginners (as an exercise to introduce classes).\
+The instructions/examples about the ValueError messages are a bit misleading imo, there's no need to follow them.
 
 ### Usage
 Run the python morsels tests with `python src/bank_account/test_bank_account.py`.\
