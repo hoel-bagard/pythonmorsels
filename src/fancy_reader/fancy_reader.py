@@ -4,14 +4,15 @@ from typing import Optional
 
 
 class Row:
+    def __init__(self, **attrs):
+        for key, value in attrs.items():
+            setattr(self, key, value)
+
     def __iter__(self):
-        current = 0
-        while current < len(self.__dict__.items()):
-            yield list(self.__dict__.values())[current]
-            current += 1
+        yield from self.__dict__.values()
 
     def __repr__(self):
-        content = ", ".join([f"{value_name}='{name}'" for value_name, name in self.__dict__.items()])
+        content = ", ".join([f"{value_name}={repr(name)}" for value_name, name in self.__dict__.items()])
         return f"{type(self).__name__}({content})"
 
 
@@ -29,11 +30,8 @@ class FancyReader:
             self.field_names = next(self.csv_data)
             self.line_num += 1
         values = next(self.csv_data)
-        row = Row()
-        for attribute, value in zip(self.field_names, values, strict=True):
-            setattr(row, attribute, value)
         self.line_num += 1
-        return row
+        return Row(**dict(zip(self.field_names, values)))
 
     def __repr__(self):
         return f"{type(self).__name__}(file={self.csv_data})"

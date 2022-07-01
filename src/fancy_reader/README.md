@@ -1,6 +1,10 @@
 # [Fancy Reader](https://www.pythonmorsels.com/exercises/7271e894d9f24b8385ad6cda60c519e4)
 
 ### My notes
+- To print a representation that looks like Python code (`Row(a='b')` vs `Row(a=b)`), use the `repr` function on the variable (the one containing `b` here).
+- Use `yield from` when possible.
+- Could have used `collections.namedtuple` to make the Row class.
+
 
 ### Usage
 Run the python morsels tests with `python src/fancy_reader/test_fancy_reader.py`.\
@@ -17,8 +21,6 @@ I'd like you to make a FancyReader callable that will accept an iterable of stri
 >>> reader = FancyReader(lines, fieldnames=['w1', 'w2', 'w3'])
 >>> for row in reader:
 ...     print(row.w1, row.w2, row.w3)
-```
-```
 my fake file
 has two rows
 ```
@@ -36,7 +38,7 @@ For the second bonus, I'd like you to make the fieldnames attribute optional. If
 #### Bonus 3
 For the third bonus, I'd like the return value of FancyReader to have a line_num attribute, the same way csv.reader does:
 
-```
+```python
 >>> lines = 'red,1\nblue,2\ngreen,3'.splitlines()
 >>> reader = FancyReader(lines, fieldnames=['color', 'number'])
 >>> next(reader)
@@ -50,4 +52,3 @@ Row(color='blue', number='2')
 ```
 
 If you get stumped while working on the bonuses, you may want to take a look at the source code for DictReader. You could almost nearly copy what DictReader does if you wanted to. But if you want more of a challenge I recommend not looking at the DictReader source code (until you get stuck).
-
