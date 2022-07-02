@@ -19,6 +19,8 @@ def pluck(nested_dict: NestedDict[T],
         try:
             if isinstance(partial_dict, dict):
                 partial_dict = partial_dict[key]
+            else:
+                raise KeyError(f"Key {repr(key)} not found.")
         except KeyError:
             if default is not PLUCK_NO_DEFAULT:
                 return default  # Not sure how to fix typing here.
