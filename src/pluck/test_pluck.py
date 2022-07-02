@@ -36,7 +36,7 @@ def test_pluck_one_level_deep(example_nested_dict: NestedDict[N], path: str, exp
     ("a.b.c.d.e", 4),
 ])
 def test_pluck_many_levels_deep(path: str, expected_result: NestedDict[N] | N):
-    deep_nested_dict = {'a': {'b': {'c': {'d': {'e': 4}}}}}
+    deep_nested_dict: NestedDict[int] = {'a': {'b': {'c': {'d': {'e': 4}}}}}
     assert pluck(deep_nested_dict, path) == expected_result
 
 

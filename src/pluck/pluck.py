@@ -7,20 +7,23 @@ PLUCK_NO_DEFAULT = object()
 
 
 def pluck(nested_dict: NestedDict[T],
-          *paths: str,
+          *key_paths: str,
           sep: str = '.',
-          default: D = PLUCK_NO_DEFAULT) -> NestedDict[T] | T | D:
-    if len(paths) > 1:
-        return tuple(pluck(nested_dict, path, sep=sep, default=default) for path in paths)
-    path = paths[0]
-    for key in path.split(sep):
+          default: D = PLUCK_NO_DEFAULT) -> tuple[NestedDict[T] | T | D] | NestedDict[T] | T | D:
+    if len(key_paths) > 1:
+        return tuple(pluck(nested_dict, key_path, sep=sep, default=default) for key_path in key_paths)
+
+    key_path = key_paths[0]
+    partial_dict: NestedDict[T] | T = nested_dict
+    for key in key_path.split(sep):
         try:
-            nested_dict = nested_dict[key]
+            if isinstance(partial_dict, dict):
+                partial_dict = partial_dict[key]
         except KeyError:
             if default is not PLUCK_NO_DEFAULT:
-                return default
+                return default  # Not sure how to fix typing here.
             raise
-    return nested_dict
+    return partial_dict
 
 
 def test_equal(res, expected_res):
