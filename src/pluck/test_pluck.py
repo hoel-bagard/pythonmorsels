@@ -1,8 +1,8 @@
-from typing import Any, TypeVar
+from typing import TypeVar
 
 import pytest
 
-from pluck import NestedDict, pluck
+from src.pluck.pluck import NestedDict, pluck
 
 
 N = TypeVar('N', bound=int)  # The tests only use ints for simplicity
@@ -75,7 +75,7 @@ def test_specifying_default_value(example_nested_dict: NestedDict[N],
 
 
 @pytest.mark.bonus3
-@pytest.mark.parametrize("path, default, expected_result", [
+@pytest.mark.parametrize("paths, default, expected_result", [
     (("a.b", "c.e", "c.d", "x"), None, (5, None, 3, 40)),
 ])
 def test_multiple_lookups_accepted(example_nested_dict: NestedDict[N],
