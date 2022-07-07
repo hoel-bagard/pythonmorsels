@@ -6,8 +6,8 @@ def create_dict(attrs: list[str]) -> dict[str, str | None]:
     for attr in attrs:
         key, *value = attr.split('=')
         if key not in attrs_dict.keys():  # For Bonus 1
-            if isinstance(value, str):
-                attrs_dict[key] = value
+            if len(value) == 1:
+                attrs_dict[key] = value[0]
             else:
                 attrs_dict[key] = None  # Could remove the else to have the default value be []
     return attrs_dict
