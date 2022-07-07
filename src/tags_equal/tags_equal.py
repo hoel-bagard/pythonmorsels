@@ -1,24 +1,27 @@
 from shlex import split
 
 
-def create_dict(attrs: str) -> dict[str, str]:
-    attrs_dict: dict[str, str] = {}
+def create_dict(attrs: list[str]) -> dict[str, str | None]:
+    attrs_dict: dict[str, str | None] = {}
     for attr in attrs:
         key, *value = attr.split('=')
         if key not in attrs_dict.keys():  # For Bonus 1
-            attrs_dict[key] = value
+            if isinstance(value, str):
+                attrs_dict[key] = value
+            else:
+                attrs_dict[key] = None  # Could remove the else to have the default value be []
     return attrs_dict
 
 
 def tags_equal(tag1: str, tag2: str) -> bool:
-    tag1, tag2 = split(tag1[1:-1].lower()), split(tag2[1:-1].lower())
+    preprocessed_tag1, preprocessed_tag2 = split(tag1[1:-1].lower()), split(tag2[1:-1].lower())
 
     # Check that tag names are the same.
-    if tag1.pop(0) != tag2.pop(0):
+    if preprocessed_tag1.pop(0) != preprocessed_tag2.pop(0):
         return False
 
-    tag1_dict = create_dict(tag1)
-    tag2_dict = create_dict(tag2)
+    tag1_dict = create_dict(preprocessed_tag1)
+    tag2_dict = create_dict(preprocessed_tag2)
 
     # Check that they have the same attributes.
     if set(tag1_dict.keys()) != set(tag2_dict.keys()):
