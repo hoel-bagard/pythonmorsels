@@ -9,6 +9,7 @@ Run the tests with:
 - For all tests: `python -m pytest src/pluck`.
 - For only the base exercise: `python -m pytest src/pluck -m "not (bonus1 or bonus2 or bonus3)"`
 - For the base exercise and the first bonus: `python -m pytest src/pluck -m "not (bonus2 or bonus3)"`
+
 Run the main file with `python src/pluck/pluck.py`.
 
 ### Description:
