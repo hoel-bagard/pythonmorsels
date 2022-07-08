@@ -22,8 +22,9 @@ def uniques_only(in_iter: Iterable[T]) -> Iterator[T]:
 def uniques_only_str(in_iter: Iterable[T]) -> Iterator[T]:
     """Function made just for fun.
 
-    Passes the morsel tests, but would not actually work since if a non-hashable object doesn't have a string representation,
-    two equal instances of that object would not be considered as different and would therefore be duplicated.
+    Passes the morsel tests, but would not actually work since if a non-hashable object doesn't have
+    a string representation, two equal instances of that object would not be considered as different
+    and would therefore be duplicated.
     """
     seen: set[T | str] = set()
     for item in in_iter:
