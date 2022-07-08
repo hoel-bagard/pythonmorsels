@@ -1,21 +1,7 @@
 {
   "include": [
-    "src",
-    "utils",
-    "train.py",
-    "inference.py"
+    "src"
   ],
-
-  "ignore": [
-    "src/torch_utils",
-    "src/stubs"
-  ]
-
-  "exclude": [
-    "checkpoints"
-  ]
-
-  "stubPath": "src/stubs",
 
   "strictListInference": true,
   "strictDictionaryInference": true,
