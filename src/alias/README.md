@@ -1,8 +1,8 @@
 # [alias](https://www.pythonmorsels.com/exercises/31d30a8a37dd452bb7efcf226ac0dae5)
 
 ### My notes
-- Insteresting exercise, learned quite a bit.
-- []Documentation on descriptors](https://docs.python.org/3/howto/descriptor.html#descriptorhowto) (quite good).
+- The base exercise was insteresting since I do not use descriptors often. Once the base exercise is done, the bonuses are trivial.
+- [Documentation on descriptors](https://docs.python.org/3/howto/descriptor.html#descriptorhowto) (quite good).
 
 
 ### Usage
@@ -71,3 +71,29 @@ And writing to the alias should update the value of the attribute being aliased:
 >>> record.serial
 '149S'
 ```
+
+
+#### Bonus 3
+For the third bonus, I'd like you to support class-level aliases and not just instance-level aliases.
+
+For example here's a class that maintains a _registry attribute and a read-only registry attribute aliasing it:
+
+```python
+class RegisteredObject:
+    _registry = ()
+    registry = alias('_registry')
+    def __init__(self, name):
+        RegisteredObject._registry += (self,)
+        self.name = name
+```
+
+Accessing the above class's registry attribute should work properly:
+```python
+>>> object = RegisteredObject("Trey")
+>>> object.name
+'Trey'
+>>> RegisteredObject.registry
+(<alias.RegisteredObject object at 0x7f06ca5bf9b0>,)
+```
+
+The tests only check for class-level attribute lookups (not assignments).

@@ -105,11 +105,10 @@ class TestBonus2:
         assert aliased_instance.non_writeable is aliased_instance.true_name
 
 
-# # To test bonus 3, comment out the next line
-# @unittest.expectedFailure
-# def test_attribute_mirrored_on_class(self):
-#     class Thing:
-#         one = 4
-#         two = alias('one')
-#     self.assertEqual(Thing.one, 4)
-#     self.assertEqual(Thing.two, 4)
+@pytest.mark.bonus2
+class TestBonus3:
+    def test_attribute_mirrored_on_class(self):
+        class AliasedClass3:
+            true_name = "Bonus3"
+            alias_name = alias("true_name")
+        assert AliasedClass3.true_name == AliasedClass3.alias_name == "Bonus3"

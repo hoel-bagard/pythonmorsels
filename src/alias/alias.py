@@ -9,10 +9,14 @@ class alias:  # noqa: N801
         self.write = write
 
     def __set_name__(self, owner: object, alias_name: str):
+        self.owner = owner
         self.alias_name = alias_name
 
     def __get__(self, obj, objtype=None):
-        return getattr(obj, self.true_name)
+        if obj is not None:
+            return getattr(obj, self.true_name)
+        else:
+            return getattr(objtype, self.true_name)
 
     def __set__(self, obj, value):
         if not self.write:
@@ -26,6 +30,8 @@ def test_equal(res: T, expected_res: T) -> None:
 
 def main():
     # Base exercise:
+    print("Testing the base exercise")
+
     class DataRecord:
         title = alias("serial")
 
@@ -38,6 +44,7 @@ def main():
     test_equal(record.title, "149S")
 
     # Bonus 1
+    print("Testing bonus 1")
     try:
         record.title = "149S"
         raise Exception("Should have raised an AttributeError but did not.")
@@ -45,6 +52,8 @@ def main():
         pass
 
     # Bonus 2
+    print("Testing bonus 2")
+
     class DataRecord:
         title = alias("serial", write=True)
 
@@ -53,6 +62,20 @@ def main():
     record = DataRecord("148X")
     record.title = "149S"
     test_equal(record.serial, "149S")
+
+    # Bonus 3
+    print("Testing bonus 3")
+
+    class RegisteredObject:
+        _registry = ()
+        registry = alias("_registry")
+
+        def __init__(self, name):
+            RegisteredObject._registry += (self,)
+            self.name = name
+
+    _registered_object = RegisteredObject("Bonus3")  # noqa: F841
+    assert len(RegisteredObject.registry) == 1
 
     print("Passed the tests!")
 
