@@ -15,7 +15,7 @@
   "reportUnusedVariable": "warning",
   "reportDuplicateImport": "warning",
   "reportUntypedNamedTuple": "warning",
-  "reportMissingSuperCall": "warning",
+  "reportMissingSuperCall": false,
   "reportUnknownArgumentType": "warning",
   "reportUnknownLambdaType": "warning",
   "reportUnknownVariableType": "warning",
