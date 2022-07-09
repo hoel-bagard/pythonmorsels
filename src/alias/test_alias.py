@@ -111,7 +111,7 @@ class TestBonus2:
         assert aliased_instance.non_writeable is aliased_instance.true_name
 
 
-@pytest.mark.bonus2
+@pytest.mark.bonus3
 class TestBonus3:
     def test_attribute_mirrored_on_class(self):
         class AliasedClass3:
