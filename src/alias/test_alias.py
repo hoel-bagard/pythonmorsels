@@ -6,9 +6,11 @@ from src.alias.alias import alias
 
 
 class AliasedClass1:
+    writeable: object
+    non_writeable: object
     alias_name = alias("true_name")
 
-    def __init__(self, value):
+    def __init__(self, value: object):
         self.true_name = value
 
 
@@ -31,21 +33,25 @@ def aliased_instance2() -> AliasedClass2:
 
 
 @pytest.mark.parametrize("expected_value", [aliased_class2_base_value])
-def test_mirrors_attribute_on_class(aliased_instance2, expected_value):
+def test_mirrors_attribute_on_class(aliased_instance2: AliasedClass2, expected_value: int):
     assert aliased_instance2.true_name == aliased_instance2.alias_name == expected_value
 
 
 @pytest.mark.parametrize("aliased_instance, expected_value",
-                         [(v := 4, v), (v := "123", v)],
+                         [(v := 4, v),
+                          (v := "123", v)],
                          indirect=["aliased_instance"])
 def test_mirrors_attribute_from_initializer(aliased_instance: AliasedClass1, expected_value: int | str):
     assert aliased_instance.true_name == aliased_instance.alias_name == expected_value
 
 
 @pytest.mark.parametrize("aliased_instance, first_value, second_value",
-                         [(v := 1, v, v+1), (v := "123", v, v+'1')],
+                         [(v := 1, v, v+1),
+                          (v := "123", v, v+'1')],
                          indirect=["aliased_instance"])
-def test_attribute_mirroring_maintained(aliased_instance, first_value: int | str, second_value: int | str):
+def test_attribute_mirroring_maintained(aliased_instance: AliasedClass1,
+                                        first_value: int | str,
+                                        second_value: int | str):
     assert aliased_instance.true_name == aliased_instance.alias_name == first_value
 
     aliased_instance.true_name = second_value
@@ -54,7 +60,7 @@ def test_attribute_mirroring_maintained(aliased_instance, first_value: int | str
 
 
 @pytest.mark.parametrize("aliased_instance, expected_value",
-                         [(a := [], a),
+                         [(a := [1], a),
                           (4, 4)],
                          indirect=["aliased_instance"])
 def test_attribute_identity(aliased_instance: AliasedClass1, expected_value: int):
@@ -79,8 +85,8 @@ class TestBonus2:
     @pytest.mark.parametrize("original_value, mutated_value",
                              [(4321, 1234),
                               ("test", "success"),
-                              (None, [])])
-    def test_writable_attribute(self, original_value, mutated_value):
+                              (None, [1])])
+    def test_writable_attribute(self, original_value: int | str | None, mutated_value: int | str | list[int]):
         AliasedClass1.writeable = alias("true_name", write=True)
         aliased_instance = AliasedClass1(original_value)
         assert aliased_instance.writeable == aliased_instance.true_name == original_value
@@ -100,7 +106,7 @@ class TestBonus2:
 
         expected_mutated_value = original_value.copy()
         expected_mutated_value.append(append_value)
-        aliased_instance.non_writeable.append(append_value)
+        aliased_instance.non_writeable.append(append_value)  # type: ignore
         assert aliased_instance.writeable == aliased_instance.true_name == expected_mutated_value
         assert aliased_instance.non_writeable is aliased_instance.true_name
 

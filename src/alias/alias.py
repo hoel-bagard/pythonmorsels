@@ -1,4 +1,4 @@
-from typing import TypeVar
+from typing import Optional, TypeVar
 
 T = TypeVar('T')
 
@@ -8,17 +8,17 @@ class alias:  # noqa: N801
         self.true_name = true_name
         self.write = write
 
-    def __set_name__(self, owner: object, alias_name: str):
-        self.owner = owner
-        self.alias_name = alias_name
+    # def __set_name__(self, owner: object, alias_name: str):
+    #     self.owner = owner
+    #     self.alias_name = alias_name
 
-    def __get__(self, obj, objtype=None):
+    def __get__(self, obj: Optional[object], objtype: Optional[type] = None) -> object:
         if obj is not None:
             return getattr(obj, self.true_name)
         else:
             return getattr(objtype, self.true_name)
 
-    def __set__(self, obj, value):
+    def __set__(self, obj: object, value: object) -> None:
         if not self.write:
             raise AttributeError("can't set attribute")
         setattr(obj, self.true_name, value)
@@ -35,7 +35,7 @@ def main():
     class DataRecord:
         title = alias("serial")
 
-        def __init__(self, serial):
+        def __init__(self, serial: str):
             self.serial = serial
 
     record = DataRecord("148X")
@@ -54,12 +54,12 @@ def main():
     # Bonus 2
     print("Testing bonus 2")
 
-    class DataRecord:
+    class DataRecord2:
         title = alias("serial", write=True)
 
-        def __init__(self, serial):
+        def __init__(self, serial: str):
             self.serial = serial
-    record = DataRecord("148X")
+    record = DataRecord2("148X")
     record.title = "149S"
     test_equal(record.serial, "149S")
 
@@ -70,12 +70,12 @@ def main():
         _registry = ()
         registry = alias("_registry")
 
-        def __init__(self, name):
+        def __init__(self, name: str):
             RegisteredObject._registry += (self,)
             self.name = name
 
     _registered_object = RegisteredObject("Bonus3")  # noqa: F841
-    assert len(RegisteredObject.registry) == 1
+    assert len(RegisteredObject.registry) == 1  # type: ignore
 
     print("Passed the tests!")
 
