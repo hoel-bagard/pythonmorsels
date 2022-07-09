@@ -53,3 +53,21 @@ Traceback (most recent call last):
   File "<stdin>", line 1, in <module>
 AttributeError: can't set attribute
 ```
+
+#### Bonus 2
+For the second bonus, I'd like you to accept a write keyword argument to allow your aliased attribute to be written to. Using that attribute would look like this:
+
+```python
+class DataRecord:
+    title = alias("serial", write=True)
+    def __init__(self, serial):
+        self.serial = serial
+```
+And writing to the alias should update the value of the attribute being aliased:
+
+```python
+>>> record = DataRecord("148X")
+>>> record.title = "149S"
+>>> record.serial
+'149S'
+```

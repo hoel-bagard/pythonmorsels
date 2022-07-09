@@ -1,6 +1,4 @@
 """Tests for the alias exercise using Pytest."""
-from typing import TypeVar
-
 import pytest
 from _pytest.fixtures import SubRequest
 
@@ -76,28 +74,35 @@ class TestBonus1:
         assert aliased_instance.true_name == aliased_instance.alias_name == original_value
 
 
-# @pytest.mark.bonus2
-# class TestBonus2:
-#     def test_writable_attribute(self):
-#         class Thing2:
-#             blue = alias('red', write=True)
-#             red = []
-#         thing2 = Thing2()
-#         self.assertIs(thing2.blue, thing2.red)
-#         thing2.blue = [4, 5]
-#         self.assertEqual(thing2.blue, [4, 5])
-#         self.assertIs(thing2.blue, thing2.red)
+@pytest.mark.bonus2
+class TestBonus2:
+    @pytest.mark.parametrize("original_value, mutated_value",
+                             [(4321, 1234),
+                              ("test", "success"),
+                              (None, [])])
+    def test_writable_attribute(self, original_value, mutated_value):
+        AliasedClass1.writeable = alias("true_name", write=True)
+        aliased_instance = AliasedClass1(original_value)
+        assert aliased_instance.writeable == aliased_instance.true_name == original_value
+        aliased_instance.writeable = mutated_value
+        assert aliased_instance.writeable == aliased_instance.true_name == mutated_value
+        assert aliased_instance.writeable is aliased_instance.true_name
 
-#         # write=False raises an AttributeError (mutation works though)
-#         class Thing3:
-#             blue = alias('red', write=False)
-#             red = []
-#         thing3 = Thing3()
-#         with self.assertRaises(AttributeError):
-#             thing3.blue = [4, 5]
-#         thing3.blue.append(6)
-#         self.assertEqual(thing3.blue, [6])
-#         self.assertIs(thing3.blue, thing3.red)
+    @pytest.mark.parametrize("original_value, append_value", [([1, 2, 3], 4)])
+    def test_non_writable_attribute(self, original_value: list[int], append_value: int):
+        """Check that write=False raises an AttributeError but mutation works."""
+        AliasedClass1.non_writeable = alias("true_name", write=False)
+        aliased_instance = AliasedClass1(original_value)
+
+        assert aliased_instance.non_writeable == aliased_instance.true_name == original_value
+        with pytest.raises(AttributeError):
+            aliased_instance.non_writeable = None
+
+        expected_mutated_value = original_value.copy()
+        expected_mutated_value.append(append_value)
+        aliased_instance.non_writeable.append(append_value)
+        assert aliased_instance.writeable == aliased_instance.true_name == expected_mutated_value
+        assert aliased_instance.non_writeable is aliased_instance.true_name
 
 
 # # To test bonus 3, comment out the next line
