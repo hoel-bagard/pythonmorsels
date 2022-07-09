@@ -37,3 +37,19 @@ This should allow title to mirror the value of serial when being read:
 You don't need to worry about what happens when you write to title, until the first bonus.
 
 This is a very weird one. If you're completely stumped, I recommend taking a look at the hints (specifically the "what is this even" hint).
+
+#### Bonus 1
+For the first bonus, I'd like you to make sure an AttributeError exception is raised when your aliases are assigned to.
+
+```python
+>>> class DataRecord:
+...     title = alias('serial')
+...     def __init__(self, serial):
+...         self.serial = serial
+...
+>>> record = DataRecord("148X")
+>>> record.title = "149S"
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: can't set attribute
+```

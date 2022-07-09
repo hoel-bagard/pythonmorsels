@@ -13,6 +13,9 @@ class alias:  # noqa: N801
     def __get__(self, obj, objtype=None):
         return getattr(obj, self.true_name)
 
+    def __set__(self, obj, objtype=None):
+        raise AttributeError("can't set attribute")
+
 
 def test_equal(res: T, expected_res: T) -> None:
     assert res == expected_res, f"Wrong result, got:\n\t{res}\nbut expected\n\t {expected_res}"
@@ -32,7 +35,11 @@ def main():
     test_equal(record.title, "149S")
 
     # Bonus 1
-
+    try:
+        record.title = "149S"
+        raise Exception("Should have raised an AttributeError but did not.")
+    except AttributeError:
+        pass
     # Bonus 2
 
     print("Passed the tests!")

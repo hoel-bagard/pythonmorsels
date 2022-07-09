@@ -6,11 +6,6 @@ from _pytest.fixtures import SubRequest
 
 from src.alias.alias import alias
 
-T = TypeVar('T')
-
-
-first_value = 4
-
 
 class AliasedClass1:
     alias_name = alias("true_name")
@@ -19,8 +14,11 @@ class AliasedClass1:
         self.true_name = value
 
 
+aliased_class2_base_value = 1
+
+
 class AliasedClass2:
-    true_name = first_value
+    true_name = aliased_class2_base_value
     alias_name = alias("true_name")
 
 
@@ -29,23 +27,29 @@ def aliased_instance(request: SubRequest) -> AliasedClass1:
     return AliasedClass1(request.param)
 
 
-def test_mirrors_attribute_on_class():
-    aliased_instance = AliasedClass2()
-    assert aliased_instance.true_name == aliased_instance.alias_name == first_value
+@pytest.fixture(scope="function")
+def aliased_instance2() -> AliasedClass2:
+    return AliasedClass2()
+
+
+@pytest.mark.parametrize("expected_value", [aliased_class2_base_value])
+def test_mirrors_attribute_on_class(aliased_instance2, expected_value):
+    assert aliased_instance2.true_name == aliased_instance2.alias_name == expected_value
 
 
 @pytest.mark.parametrize("aliased_instance, expected_value",
                          [(v := 4, v), (v := "123", v)],
                          indirect=["aliased_instance"])
-def test_mirrors_attribute_from_initializer(aliased_instance: AliasedClass1, expected_value):
+def test_mirrors_attribute_from_initializer(aliased_instance: AliasedClass1, expected_value: int | str):
     assert aliased_instance.true_name == aliased_instance.alias_name == expected_value
 
 
-def test_attribute_mirroring_maintained():
-    aliased_instance = AliasedClass2()
+@pytest.mark.parametrize("aliased_instance, first_value, second_value",
+                         [(v := 1, v, v+1), (v := "123", v, v+'1')],
+                         indirect=["aliased_instance"])
+def test_attribute_mirroring_maintained(aliased_instance, first_value: int | str, second_value: int | str):
     assert aliased_instance.true_name == aliased_instance.alias_name == first_value
 
-    second_value = 6
     aliased_instance.true_name = second_value
     assert aliased_instance.true_name == aliased_instance.alias_name == second_value
     assert aliased_instance.alias_name != first_value
@@ -55,22 +59,21 @@ def test_attribute_mirroring_maintained():
                          [(a := [], a),
                           (4, 4)],
                          indirect=["aliased_instance"])
-def test_attribute_identity(aliased_instance, expected_value):
+def test_attribute_identity(aliased_instance: AliasedClass1, expected_value: int):
     assert aliased_instance.true_name is expected_value
     assert aliased_instance.alias_name is expected_value
 
 
-# @pytest.mark.bonus1
-# class TestBonus1:
-#     def test_attribute_unwritable_by_default(self):
-#         class Thing:
-#             one = 4
-#             two = alias('one')
-#         thing = Thing()
-#         with self.assertRaises(AttributeError):
-#             thing.two = 6
-#         self.assertEqual(thing.one, 4)
-#         self.assertEqual(thing.two, 4)
+@pytest.mark.bonus1
+class TestBonus1:
+    @pytest.mark.parametrize("aliased_instance, original_value",
+                             [(v := 1, v),
+                              (v := [1, 2], v)],
+                             indirect=["aliased_instance"])
+    def test_attribute_unwritable_by_default(self, aliased_instance: AliasedClass1, original_value: int | list[int]):
+        with pytest.raises(AttributeError):
+            aliased_instance.alias_name = 1
+        assert aliased_instance.true_name == aliased_instance.alias_name == original_value
 
 
 # @pytest.mark.bonus2
