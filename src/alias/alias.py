@@ -8,9 +8,8 @@ class alias:  # noqa: N801
         self.true_name = true_name
         self.write = write
 
-    # def __set_name__(self, owner: object, alias_name: str):
-    #     self.owner = owner
-    #     self.alias_name = alias_name
+    def __set_name__(self, owner: object, alias_name: str):
+        self.alias_name = alias_name
 
     def __get__(self, obj: Optional[object], objtype: Optional[type] = None) -> object:
         if obj is not None:
@@ -20,7 +19,7 @@ class alias:  # noqa: N801
 
     def __set__(self, obj: object, value: object) -> None:
         if not self.write:
-            raise AttributeError("can't set attribute")
+            raise AttributeError(f"{repr(self.alias_name)} is an alias an cannot be set.")
         setattr(obj, self.true_name, value)
 
 
