@@ -10,11 +10,7 @@ def tail(iterable: Iterable[T], nb_elts: int) -> list[T]:
     if nb_elts <= 0:
         return []
 
-    tail_elts: deque[T] = deque(maxlen=nb_elts)
-    for elt in iterable:
-        tail_elts.append(elt)
-
-    return list(tail_elts)
+    return list(deque(iterable, maxlen=nb_elts))
 
 
 def test_equal(res: list[T], expected_res: list[T]) -> None:
