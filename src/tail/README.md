@@ -1,7 +1,7 @@
 # [tail](https://www.pythonmorsels.com/exercises/83ed2a27b86b41a185036b262fb67c41)
 
 ### My notes
-
+- A `deque` can be initialized from an iterable.
 
 ### Usage
 Run the tests with:
