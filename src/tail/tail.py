@@ -10,7 +10,7 @@ def tail(iterable: Iterable[T], nb_elts: int) -> list[T]:
     if nb_elts <= 0:
         return []
 
-    tail_elts = deque(maxlen=nb_elts)
+    tail_elts: deque[T] = deque(maxlen=nb_elts)
     for elt in iterable:
         tail_elts.append(elt)
 
