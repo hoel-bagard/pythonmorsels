@@ -7,10 +7,7 @@ T = TypeVar('T')
 
 
 def tail(iterable: Iterable[T], nb_elts: int) -> list[T]:
-    if nb_elts <= 0:
-        return []
-
-    return list(deque(iterable, maxlen=nb_elts))
+    return [] if nb_elts <= 0 else list(deque(iterable, maxlen=nb_elts))
 
 
 def test_equal(res: list[T], expected_res: list[T]) -> None:
