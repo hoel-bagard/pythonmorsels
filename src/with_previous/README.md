@@ -1,6 +1,16 @@
 # [with_previous](https://www.pythonmorsels.com/exercises/492b1f182bf44203a3f17227c681bdcc)
 
 ### My notes
+- Really standard, might be good for people not familiar with iterables or generators.
+- The solution gives a way to solve the exercise using the standard library:
+
+```python
+from itertools import tee, chain
+def with_previous(iterable):
+    i1, i2 = tee(iterable)
+    return zip(i1, chain([None], i2))
+```
+
 
 ### Usage
 Run the tests with:
