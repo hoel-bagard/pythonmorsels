@@ -19,7 +19,7 @@ def assert_equal_iterable(iterable1: Iterable[Optional[T]], iterable2: Iterable[
                           (['1', '2'], [('1', None), ('2', '1')]),
                           ([None, None], [(None, None), (None, None)])
                           ])
-def test_basic(iterable: Iterable[T], expected_value: list[T]):
+def test_basic(iterable: Iterable[Optional[T]], expected_value: list[Optional[T]]):
     assert_equal_iterable(with_previous(iterable), expected_value)
 
 
@@ -57,4 +57,4 @@ class TestBonus3:
         expected_outputs = [(1, 0), (2, 1), (3, 2)]
         assert_equal_iterable(with_previous(inputs, fillvalue=0), expected_outputs)
         with pytest.raises(TypeError):
-            with_previous(inputs, 0)
+            with_previous(inputs, 0)  # type: ignore

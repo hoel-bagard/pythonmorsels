@@ -1,11 +1,11 @@
-from collections.abc import Iterable
+from collections.abc import Iterable, Iterator
 from typing import Optional, TypeVar
 
 
 T = TypeVar('T')
 
 
-def with_previous(iterable: Iterable[T], *, fillvalue: Optional[T] = None) -> tuple[T, T | None]:
+def with_previous(iterable: Iterable[T], *, fillvalue: Optional[T] = None) -> Iterator[tuple[T, T | None]]:
     previous = fillvalue
     for item in iterable:
         yield (item, previous)
@@ -28,13 +28,13 @@ def main():
 
     # Bonus 2
     print("Testing bonus 2")
-    assert_equal(next(with_previous([1, 2, 3])), (1, None))
+    assert_equal([next(with_previous([1, 2, 3]))], [(1, None)])
 
     # Bonus 3
     print("Testing bonus 3")
     assert_equal(list(with_previous([1, 2, 3], fillvalue=0)), [(1, 0), (2, 1), (3, 2)])
     try:
-        list(with_previous([1, 2, 3], 0))
+        with_previous([1, 2, 3], 0)  # type: ignore
         raise Exception("Should have raised a TypeError but did not")
     except TypeError:
         pass
