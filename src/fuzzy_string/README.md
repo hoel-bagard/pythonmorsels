@@ -29,9 +29,8 @@ False
 
 I'd like you to make sure equality and inequality match case-insensitively at first. I'd also like you to ensure that the string representations of your class match Python's string object's default string representations.
 
-For the first bonus, try to ensure the other comparison operators work as expected:
-
 #### Bonus 1
+For the first bonus, try to ensure the other comparison operators work as expected:
 ```python
 >>> o_word = FuzzyString('Octothorpe')
 >>> 'hashtag' < o_word
@@ -39,6 +38,7 @@ True
 >>> 'hashtag' > o_word
 False
 ```
+
 I'd like you to make sure that comparison works for two FuzzyString objects also:
 ```python
 >>> tokyo = FuzzyString("tokyo")

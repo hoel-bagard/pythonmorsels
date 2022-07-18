@@ -2,6 +2,7 @@ from collections import UserString
 from typing import TypeVar
 
 T = TypeVar('T')
+TFuzzyString = TypeVar("TFuzzyString", bound="FuzzyString")
 
 
 class FuzzyString(UserString):
@@ -10,6 +11,12 @@ class FuzzyString(UserString):
 
     def __eq__(self, other: str):
         return self.data.lower() == other.lower()
+
+    def __lt__(self, other: str | TFuzzyString):
+        return self.data.lower() < other.lower()
+
+    def __gt__(self, other: str | TFuzzyString):
+        return self.data.lower() > other.lower()
 
 
 def assert_equal(res: T, expected_res: T) -> None:
@@ -22,10 +29,18 @@ def main():
     greeting = FuzzyString("Hey!")
     assert_equal(greeting, "hey!")
     assert_equal(greeting == "hey", False)
-    print(greeting)
+    # print(greeting)
 
     # Bonus 1
     print("Testing bonus 1")
+    greeting = FuzzyString("Ohayou")
+    assert "hashtag" < greeting
+    assert not "hashtag" > greeting
+
+    tokyo = FuzzyString("tokyo")
+    toronto = FuzzyString("TORONTO")
+    assert tokyo < toronto
+    assert not toronto < tokyo
 
     # Bonus 2
     print("Testing bonus 2")
