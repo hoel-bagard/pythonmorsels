@@ -18,6 +18,12 @@ class FuzzyString(UserString):
     def __gt__(self, other: str | TFuzzyString):
         return self.data.lower() > other.lower()
 
+    def __add__(self, other: str | TFuzzyString):
+        return FuzzyString(self.data + other)
+
+    def __contains__(self, other: str | TFuzzyString):
+        return str(other.lower()) in self.data.lower()
+
 
 def assert_equal(res: T, expected_res: T) -> None:
     assert res == expected_res, f"Wrong result, got:\n\t{res}\nbut expected\n\t {expected_res}"
@@ -44,6 +50,14 @@ def main():
 
     # Bonus 2
     print("Testing bonus 2")
+    beginning = FuzzyString("Beginning")
+    assert "BEGI" in beginning
+    concat_string = beginning + "End"
+    assert concat_string == "beginningEnd"
+
+    city_name = FuzzyString("New Delhi")
+    city_name_part = FuzzyString("w del")
+    assert city_name_part in city_name
 
     # Bonus 3
     print("Testing bonus 3")
