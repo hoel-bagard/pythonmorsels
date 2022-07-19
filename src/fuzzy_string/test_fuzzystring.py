@@ -1,3 +1,5 @@
+import pytest
+
 from src.fuzzy_string.fuzzy_string import FuzzyString
 
 
@@ -26,63 +28,66 @@ def test_string_representation():
     assert str(hello) == "heLlO"
     assert repr(hello) == repr("heLlO")
 
-    # # To test bonus 1, comment out the next line
-    # def test_other_string_comparisons():
-    #     apple = FuzzyString("Apple")
-    #     .assertGreater(apple, "animal")
-    #     .assertLess("animal", apple)
-    #     assert not apple < "animal")
-    #     assert not "animal" > apple)
-    #     .assertGreaterEqual(apple, "animal")
-    #     .assertGreaterEqual(apple, "apple")
-    #     .assertLessEqual("animal", apple)
-    #     .assertLessEqual("animal", "animal")
-    #     assert not apple <= "animal")
-    #     assert not "animal" >= apple)
 
-    #     # Additional test between the FuzzyString objects
+@pytest.mark.bonus1
+class TestBonus1:
+    def test_other_string_comparisons(self):
+        apple = FuzzyString("Apple")
+        assert apple > "animal"
+        assert "animal" < apple
+        assert not apple < "animal"
+        assert not "animal" > apple
+        assert apple >= "animal"
+        assert apple >= "apple"
+        assert "animal" <= apple
+        assert "animal" <= "animal"
+        assert not apple <= "animal"
+        assert not "animal" >= apple
 
-    #     tashkent = FuzzyString("Tashkent")
-    #     taipei = FuzzyString("taipei")
+        # Additional test between the FuzzyString objects
+        tashkent = FuzzyString("Tashkent")
+        taipei = FuzzyString("taipei")
 
-    #     .assertGreater(tashkent, taipei)
-    #     .assertLess(taipei, tashkent)
-    #     assert not tashkent < taipei)
-    #     assert not taipei > tashkent)
-    #     .assertGreaterEqual(tashkent, taipei)
-    #     .assertGreaterEqual(tashkent, tashkent)
-    #     .assertLessEqual(taipei, tashkent)
-    #     .assertLessEqual(taipei, taipei)
-    #     assert not tashkent <= taipei)
-    #     assert not taipei >= tashkent)
+        assert tashkent > taipei
+        assert taipei < tashkent
+        assert not tashkent < taipei
+        assert not taipei > tashkent
+        assert tashkent >= taipei
+        assert tashkent >= tashkent
+        assert taipei <= tashkent
+        assert taipei <= taipei
+        assert not tashkent <= taipei
+        assert not taipei >= tashkent
 
-    # # To test bonus 2, comment out the next line
-    # def test_string_operators(self):
-    #     hello = FuzzyString("heLlO")
-    #     selfassert hello + "!", "helLo!")
-    #     selfassert not hello + "!", "hello")
-    #     self.assertTrue("he" in hello)
-    #     self.assertIn("He", hello)
-    #     self.assertNotIn("He!", hello)
 
-    #     # Additional test between the FuzzyString objects
+@pytest.mark.bonus2
+class TestBonus2:
+    def test_string_operators(self):
+        hello = FuzzyString("heLlO")
+        assert hello + "!" == "helLo!"
+        assert hello + "!" != "hello"
+        assert "He" in hello
+        assert "He!" not in hello
 
-    #     new_delhi = FuzzyString("NeW DELhi")
-    #     new = FuzzyString("New")
-    #     delhi = FuzzyString("Delhi")
-    #     selfassert new + " " + delhi, new_delhi)
-    #     selfassert not new + delhi, new_delhi)
-    #     self.assertTrue(delhi in new_delhi)
-    #     self.assertIn(new, new_delhi)
+        # Additional test between the FuzzyString objects
+        new_delhi = FuzzyString("NeW DELhi")
+        new = FuzzyString("New")
+        delhi = FuzzyString("Delhi")
+        assert new + " " + delhi == new_delhi
+        assert new + delhi != new_delhi
+        assert delhi in new_delhi
+        assert new in new_delhi
 
-    # # To test bonus 3, comment out the next line
-    # def test_normalizes_strings(self):
-    #     string = FuzzyString("\u00df and ss")
-    #     selfassert string, "ss and \u00df")
-    #     string = FuzzyString("ß, ss, \uf9fb, and \u7099")
-    #     selfassert string, "ss, ß, \u7099, and \uf9fb")
 
-    #     accent = '\u0301'
-    #     accented_e = FuzzyString('\u00e9')
-    #     selfassert '\u0065\u0301', accented_e)
-    #     self.assertIn(accent, accented_e)
+@pytest.mark.bonus3
+class TestBonus3:
+    def test_normalizes_strings(self):
+        string = FuzzyString("\u00df and ss")
+        assert string == "ss and \u00df"
+        string = FuzzyString("ß, ss, \uf9fb, and \u7099")
+        assert string == "ss, ß, \u7099, and \uf9fb"
+
+        accent = "\u0301"
+        accented_e = FuzzyString("\u00e9")
+        assert "\u0065\u0301" == accented_e
+        assert accent in accented_e
