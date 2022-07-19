@@ -1,8 +1,8 @@
 ## [FuzzyString](https://www.pythonmorsels.com/exercises/9655802abaef47c682555c198ee8b641)
 
 ### My notes
-- Use `.casefold()` instead `.lower()` as it is more "general".
-- `@total_ordering` can be usefull, but does not mix well with `UserString` (or other similar classes) as they already implement the comparison methods.
+- Use [`.casefold()`](https://docs.python.org/3/library/stdtypes.html#str.casefold) instead `.lower()` as it is more "general".
+- [`@total_ordering`](https://docs.python.org/3/library/functools.html#functools.total_ordering) can be usefull, but does not mix well with [`UserString`](https://docs.python.org/3/library/collections.html#collections.UserString) (or other similar classes) as they already implement the comparison methods.
 - The issue cited above can be mediated by using an abstract class to "remove" the unwanted methods.
 
 ### Usage
