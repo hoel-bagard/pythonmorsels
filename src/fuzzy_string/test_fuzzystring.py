@@ -1,3 +1,4 @@
+"""Tests for the FuzzyString exercise using Pytest."""
 import pytest
 
 from src.fuzzy_string.fuzzy_string import FuzzyString
@@ -10,9 +11,7 @@ def test_equality_and_inequality_with_same_string():
 
 
 def test_equality_with_completely_different_string():
-    hello = FuzzyString("hello")
-    assert not hello == "Hello there"
-    assert not hello == "Hello there"
+    assert FuzzyString("hello") != "Hello there"
 
 
 def test_equality_and_inequality_with_different_case_string():
@@ -24,14 +23,15 @@ def test_equality_and_inequality_with_different_case_string():
 
 
 def test_string_representation():
-    hello = FuzzyString("heLlO")
-    assert str(hello) == "heLlO"
-    assert repr(hello) == repr("heLlO")
+    hello = "heLlO"
+    hello_fuzzy = FuzzyString(hello)
+    assert str(hello_fuzzy) == hello
+    assert repr(hello_fuzzy) == repr(hello)
 
 
 @pytest.mark.bonus1
 class TestBonus1:
-    def test_other_string_comparisons(self):
+    def test_string_comparisons(self):
         apple = FuzzyString("Apple")
         assert apple > "animal"
         assert "animal" < apple
@@ -44,7 +44,8 @@ class TestBonus1:
         assert not apple <= "animal"
         assert not "animal" >= apple
 
-        # Additional test between the FuzzyString objects
+    def test_fuzzy_string_comparisons(self):
+        """Additional test between the FuzzyString objects."""
         tashkent = FuzzyString("Tashkent")
         taipei = FuzzyString("taipei")
 
@@ -69,7 +70,8 @@ class TestBonus2:
         assert "He" in hello
         assert "He!" not in hello
 
-        # Additional test between the FuzzyString objects
+    def test_fuzzy_string_operators(self):
+        """Additional test between the FuzzyString objects."""
         new_delhi = FuzzyString("NeW DELhi")
         new = FuzzyString("New")
         delhi = FuzzyString("Delhi")

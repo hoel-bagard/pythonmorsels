@@ -1,54 +1,48 @@
 import unicodedata
 from collections import UserString
-from functools import total_ordering
 from typing import TypeVar
 
 T = TypeVar('T')
-TFuzzyString = TypeVar("TFuzzyString", bound="FuzzyString")
 
 
-@total_ordering
 class FuzzyString(UserString):
-    def __init__(self, data: str):
-        self.data = data
-
     @staticmethod
-    def _preprocess_str(string: str | TFuzzyString):
+    def _preprocess_str(string: str | "FuzzyString") -> str:
         return unicodedata.normalize("NFKD", str(string.casefold()))
 
-    def __eq__(self, other: str | TFuzzyString):
+    def __eq__(self, other: str | "FuzzyString" | object) -> bool:
         if isinstance(other, (str, FuzzyString)):
             return self._preprocess_str(self.data) == self._preprocess_str(other)
         return NotImplemented
 
-    def __lt__(self, other: str | TFuzzyString):
+    def __lt__(self, other: str | "FuzzyString" | object) -> bool:
         if isinstance(other, (str, FuzzyString)):
             return self._preprocess_str(self.data) < self._preprocess_str(other)
         return NotImplemented
 
-    def __add__(self, other: str | TFuzzyString):
-        if isinstance(other, (str, FuzzyString)):
-            return FuzzyString(self.data + other)
-        return NotImplemented
-
-    def __contains__(self, other: str | TFuzzyString):
-        if isinstance(other, (str, FuzzyString)):
-            return str(self._preprocess_str(other)) in self._preprocess_str(self.data)
-        return NotImplemented
-
-    def __gt__(self, other: str | TFuzzyString):
+    def __gt__(self, other: str | "FuzzyString" | object) -> bool:
         if isinstance(other, (str, FuzzyString)):
             return self._preprocess_str(self.data) > self._preprocess_str(other)
         return NotImplemented
 
-    def __ge__(self, other: str | TFuzzyString):
+    def __ge__(self, other: str | "FuzzyString" | object) -> bool:
         if isinstance(other, (str, FuzzyString)):
             return self._preprocess_str(self.data) >= self._preprocess_str(other)
         return NotImplemented
 
-    def __le__(self, other: str | TFuzzyString):
+    def __le__(self, other: str | "FuzzyString" | object) -> bool:
         if isinstance(other, (str, FuzzyString)):
             return self._preprocess_str(self.data) <= self._preprocess_str(other)
+        return NotImplemented
+
+    def __add__(self, other: str | "FuzzyString" | object) -> "FuzzyString":
+        if isinstance(other, (str, FuzzyString)):
+            return FuzzyString(self.data + other)
+        return NotImplemented
+
+    def __contains__(self, other: str | "FuzzyString" | object) -> bool:
+        if isinstance(other, (str, FuzzyString)):
+            return str(self._preprocess_str(other)) in self._preprocess_str(self.data)
         return NotImplemented
 
 
