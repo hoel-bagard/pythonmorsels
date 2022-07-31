@@ -1,12 +1,13 @@
 import statistics
 import time
+from collections.abc import Iterable
 from contextlib import ContextDecorator
 from types import TracebackType
-from typing import Callable, Type
+from typing import Any, Callable, Optional, Type
 
 
 class Timer(ContextDecorator):
-    def __init__(self, func: Callable = None):
+    def __init__(self, func: Optional[Callable[[Any], Any]] = None):
         self.start = 0
         self.elapsed = 0
         self.runs: list[float] = []
@@ -21,8 +22,9 @@ class Timer(ContextDecorator):
         self.runs.append(self.elapsed)
         return False
 
-    def __call__(self, *args, **kwargs):
+    def __call__(self, *args: Any, **kwargs: dict[str, Any]):
         self.start = time.perf_counter()
+        assert self.func is not None  # For Pyright...
         res = self.func(*args, **kwargs)
         self.elapsed = time.perf_counter() - self.start
         self.runs.append(self.elapsed)
@@ -45,7 +47,7 @@ class Timer(ContextDecorator):
         return statistics.mean(self.runs)
 
 
-def assert_equal(res, expected_res) -> None:
+def assert_equal(res: object, expected_res: object) -> None:
     assert res == expected_res, f"Wrong result, got:\n\t{res}\nbut expected\n\t {expected_res}"
 
 
@@ -71,7 +73,7 @@ def main():
     print("Testing the second bonus.")
 
     @Timer
-    def sum_of_squares(numbers):
+    def sum_of_squares(numbers: Iterable[int]):
         return sum(n**2 for n in numbers)
 
     sum_of_squares(range(2**20))
