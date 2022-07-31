@@ -32,7 +32,6 @@ def main():
 
     # Bonus 1
     print("Testing the first bonus.")
-
     timer = Timer()
     with timer:
         sum(range(2**24))
@@ -42,6 +41,15 @@ def main():
     t2 = timer.elapsed
     assert_equal(timer.runs, [t1, t2])
 
+    # Bonus 2
+    print("Testing the second bonus.")
+    @Timer
+    def sum_of_squares(numbers):
+        return sum(n**2 for n in numbers)
+
+    sum_of_squares(range(2**20))
+    sum_of_squares(range(2**21))
+    assert_equal(len(sum_of_squares.runs), 2)
     print("Passed the tests!")
 
 
