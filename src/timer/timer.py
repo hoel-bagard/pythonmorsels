@@ -1,3 +1,4 @@
+import statistics
 import time
 from contextlib import ContextDecorator
 from types import TracebackType
@@ -26,6 +27,22 @@ class Timer(ContextDecorator):
         self.elapsed = time.perf_counter() - self.start
         self.runs.append(self.elapsed)
         return res
+
+    @property
+    def max(self):
+        return max(self.runs)
+
+    @property
+    def min(self):
+        return min(self.runs)
+
+    @property
+    def median(self):
+        return statistics.median(self.runs)
+
+    @property
+    def mean(self):
+        return statistics.mean(self.runs)
 
 
 def assert_equal(res, expected_res) -> None:
@@ -60,6 +77,16 @@ def main():
     sum_of_squares(range(2**20))
     sum_of_squares(range(2**21))
     assert_equal(len(sum_of_squares.runs), 2)
+
+    # Bonus 3
+    print("Testing the third bonus.")
+    sum_of_squares(range(2**19))
+    sum_of_squares(range(2**22))
+    assert_equal(sum_of_squares.min, min(sum_of_squares.runs))
+    assert_equal(sum_of_squares.max, max(sum_of_squares.runs))
+    assert_equal(sum_of_squares.mean, statistics.mean(sum_of_squares.runs))
+    assert_equal(sum_of_squares.median, statistics.median(sum_of_squares.runs))
+
     print("Passed the tests!")
 
 
