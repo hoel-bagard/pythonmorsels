@@ -1,12 +1,11 @@
 import statistics
 import time
 from collections.abc import Iterable
-from contextlib import ContextDecorator
 from types import TracebackType
 from typing import Any, Callable, Optional, Type
 
 
-class Timer(ContextDecorator):
+class Timer:
     def __init__(self, func: Optional[Callable[[Any], Any]] = None):
         self.start = 0
         self.elapsed = 0
@@ -23,12 +22,8 @@ class Timer(ContextDecorator):
         return False
 
     def __call__(self, *args: Any, **kwargs: dict[str, Any]):
-        self.start = time.perf_counter()
-        assert self.func is not None  # For Pyright...
-        res = self.func(*args, **kwargs)
-        self.elapsed = time.perf_counter() - self.start
-        self.runs.append(self.elapsed)
-        return res
+        with self:
+            return self.func(*args, **kwargs)  # pyright: ignore [reportOptionalCall]
 
     @property
     def max(self):
@@ -74,6 +69,7 @@ def main():
 
     @Timer
     def sum_of_squares(numbers: Iterable[int]):
+        """Return the elements of the iterable squared."""
         return sum(n**2 for n in numbers)
 
     sum_of_squares(range(2**20))

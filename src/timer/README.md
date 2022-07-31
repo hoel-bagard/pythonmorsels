@@ -1,6 +1,11 @@
 # [Timer](https://www.pythonmorsels.com/exercises/044b3b6f0c684c7daa096e18798c9497/)
 
 ### My notes
+- Nice "basic" exercise on context managers.
+- In `__call__`, use `with self:` instead of copy/pasting the timing code.
+- Use `wrapt.ObjectProxy` if the function's name, signature, and docstring should be preserved. (scroll a bit from [here](https://www.pythonmorsels.com/exercises/044b3b6f0c684c7daa096e18798c9497/solution/#bonus2))
+  - In that case in `__init__`, call `super().__init__(func or (lambda: None))` and in `__call__` use `return self.__wrapped__(*args, **kwargs)` (instead of `self.func`).
+
 
 ### Usage
 Run the tests with:
