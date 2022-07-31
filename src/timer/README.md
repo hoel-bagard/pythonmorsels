@@ -5,7 +5,7 @@
 ### Usage
 Run the tests with:
 - For all tests: `python -m pytest src/timer`.
-- For only the base exercise: `python -m pytest src/timer -m "not bonus1 or bonus2 or bonus3"`
+- For only the base exercise: `python -m pytest src/timer -m "not (bonus1 or bonus2 or bonus3)"`
 
 Run the main file with `python src/timer/timer.py`.
 

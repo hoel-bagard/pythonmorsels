@@ -1,13 +1,15 @@
 import time
+from contextlib import ContextDecorator
 from types import TracebackType
-from typing import Type
+from typing import Callable, Type
 
 
-class Timer:
-    def __init__(self):
+class Timer(ContextDecorator):
+    def __init__(self, func: Callable = None):
         self.start = 0
         self.elapsed = 0
         self.runs: list[float] = []
+        self.func = func
 
     def __enter__(self):
         self.start = time.perf_counter()
@@ -16,7 +18,14 @@ class Timer:
     def __exit__(self, exception_type: Type[Exception], exception: Exception, traceback: TracebackType) -> bool:
         self.elapsed = time.perf_counter() - self.start
         self.runs.append(self.elapsed)
-        return True
+        return False
+
+    def __call__(self, *args, **kwargs):
+        self.start = time.perf_counter()
+        res = self.func(*args, **kwargs)
+        self.elapsed = time.perf_counter() - self.start
+        self.runs.append(self.elapsed)
+        return res
 
 
 def assert_equal(res, expected_res) -> None:
@@ -43,6 +52,7 @@ def main():
 
     # Bonus 2
     print("Testing the second bonus.")
+
     @Timer
     def sum_of_squares(numbers):
         return sum(n**2 for n in numbers)

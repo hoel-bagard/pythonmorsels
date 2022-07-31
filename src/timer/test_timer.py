@@ -6,21 +6,12 @@ import pytest
 
 from src.timer.timer import Timer
 
-# _baseline = None
 
-# @staticmethod
-# def get_baseline(count=100):
-#     times = 0
-#     for _ in range(count):
-#         with Timer() as timer:
-#             sleep(0)
-#         times += timer.elapsed
-#     return times / count
-
-# def assertTimeEqual(self, actual, expected):
-#     if self._baseline is None:
-#         self._baseline = self.get_baseline()
-#     self.assertAlmostEqual(actual, self._baseline+expected, delta=0.15)
+def sleep(duration):
+    now = perf_counter()
+    end = now + duration
+    while now < end:
+        now = perf_counter()
 
 
 def test_short_time():
@@ -69,10 +60,10 @@ class TestBonus1:
             sleep(0.005)
         with timer1:
             pass
-        self.assertEqual(len(timer1.runs), 3)
-        self.assertEqual(len(timer2.runs), 2)
-        self.assertGreater(timer1.runs[0], sum(timer2.runs))
-        self.assertTimeEqual(timer1.runs[2], 0.000)
+        assert len(timer1.runs) == 3
+        assert len(timer2.runs) == 2
+        assert timer1.runs[0] > sum(timer2.runs)
+        assert pytest.approx(timer1.runs[2], abs=1e-3) == 0
 
 
 @pytest.mark.bonus2
@@ -83,10 +74,10 @@ class TestBonus2:
             sleep(0.01)
             return args, kwargs
         args, kwargs = wait(1, a=3)
-        self.assertEqual(args, (1,))
-        self.assertEqual(kwargs, {'a': 3})
-        self.assertTimeEqual(wait.elapsed, 0.01)
-        self.assertEqual(wait.runs, [wait.elapsed])
+        assert args == (1,)
+        assert kwargs == {'a': 3}
+        assert pytest.approx(wait.elapsed, abs=1e-3) == 0.01
+        assert wait.runs == [wait.elapsed]
 
 
 @pytest.mark.bonus3
@@ -99,14 +90,7 @@ class TestBonus3:
         wait(0.08)
         wait(0.03)
         times = sorted(wait.runs)
-        self.assertTimeEqual(wait.mean, sum(times)/len(times))
-        self.assertTimeEqual(wait.median, times[2])
-        self.assertTimeEqual(wait.min, times[0])
-        self.assertTimeEqual(wait.max, times[-1])
-
-
-def sleep(duration):
-    now = perf_counter()
-    end = now + duration
-    while now < end:
-        now = perf_counter()
+        assert pytest.approx(wait.mean, abs=1e-3) == sum(times)/len(times)
+        assert pytest.approx(wait.median, abs=1e-3) == times[2]
+        assert pytest.approx(wait.min, abs=1e-3) == times[0]
+        assert pytest.approx(wait.max, abs=1e-3) == times[-1]
