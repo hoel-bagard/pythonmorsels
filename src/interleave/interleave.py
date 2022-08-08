@@ -11,17 +11,20 @@ def interleave(iter1: Iterable[T1], iter2: Iterable[T2]) -> Iterable[T1 | T2]:
         yield elt2
 
 
-def test_equal(res, expected_res) -> None:
+def assert_equal(res, expected_res) -> None:
     assert res == expected_res, f"Wrong result, got:\n\t{res}\nbut expected\n\t {expected_res}"
 
 
 def main():
     # Base exercise:
     numbers = [1, 2, 3, 4]
-    test_equal(list(interleave(numbers, range(5, 9))), [1, 5, 2, 6, 3, 7, 4, 8])
-    test_equal(list(interleave(numbers, (n**2 for n in numbers))), [1, 1, 2, 4, 3, 9, 4, 16])
+    assert_equal(list(interleave(numbers, range(5, 9))), [1, 5, 2, 6, 3, 7, 4, 8])
+    assert_equal(list(interleave(numbers, (n**2 for n in numbers))), [1, 1, 2, 4, 3, 9, 4, 16])
 
     # Bonus 1
+    i = interleave([1, 2, 3, 4], [5, 6, 7, 8])
+    assert_equal(next(i), 1)
+    assert_equal(list(i), [5, 2, 6, 3, 7, 4, 8])
 
     # Bonus 2
 
