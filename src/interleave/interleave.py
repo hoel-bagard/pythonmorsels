@@ -1,9 +1,9 @@
 from collections.abc import Iterable
 from itertools import zip_longest
-from typing import TypeVar
+from typing import Generator, TypeVar
 
-T1 = TypeVar("T2")
-T2 = TypeVar("T1")
+T1 = TypeVar("T1")
+T2 = TypeVar("T2")
 
 
 def interleave_b1(iter1: Iterable[T1], iter2: Iterable[T2]) -> Iterable[T1 | T2]:
@@ -12,7 +12,7 @@ def interleave_b1(iter1: Iterable[T1], iter2: Iterable[T2]) -> Iterable[T1 | T2]
         yield elt2
 
 
-def interleave(*iterables: Iterable[object]) -> Iterable[object]:
+def interleave(*iterables: Iterable[object]) -> Generator[object, None, None]:
     fill_value = object()
     for elts in zip_longest(*iterables, fillvalue=fill_value):
         for elt in elts:
@@ -20,7 +20,7 @@ def interleave(*iterables: Iterable[object]) -> Iterable[object]:
                 yield elt
 
 
-def assert_equal(res, expected_res) -> None:
+def assert_equal(res: object, expected_res: object) -> None:
     assert res == expected_res, f"Wrong result, got:\n\t{res}\nbut expected\n\t {expected_res}"
 
 

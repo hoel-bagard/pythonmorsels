@@ -1,17 +1,17 @@
 from collections.abc import Iterable
-from typing import TypeVar
 from itertools import count
+from typing import TypeVar
 
 import pytest
 
 from src.interleave.interleave import interleave
 
 
-T1 = TypeVar("T2")
-T2 = TypeVar("T1")
+T1 = TypeVar("T1")
+T2 = TypeVar("T2")
 
 
-def assert_equal_iterables(iterable1: Iterable[T1], iterable2: Iterable[T2]) -> None:
+def assert_equal_iterables(iterable1: Iterable[object], iterable2: Iterable[object]) -> None:
     assert list(iterable1) == list(iterable2)
 
 
