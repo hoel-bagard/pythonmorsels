@@ -5,10 +5,16 @@ T1 = TypeVar("T2")
 T2 = TypeVar("T1")
 
 
-def interleave(iter1: Iterable[T1], iter2: Iterable[T2]) -> Iterable[T1 | T2]:
+def interleave_b1(iter1: Iterable[T1], iter2: Iterable[T2]) -> Iterable[T1 | T2]:
     for elt1, elt2 in zip(iter1, iter2):
         yield elt1
         yield elt2
+
+
+def interleave(*iterables: Iterable[object]) -> Iterable[object]:
+    for elts in zip(*iterables):
+        for elt in elts:
+            yield elt
 
 
 def assert_equal(res, expected_res) -> None:
@@ -27,6 +33,7 @@ def main():
     assert_equal(list(i), [5, 2, 6, 3, 7, 4, 8])
 
     # Bonus 2
+    assert_equal(list(interleave([1, 2, 3], [4, 5, 6], [7, 8, 9])), [1, 4, 7, 2, 5, 8, 3, 6, 9])
 
     # Bonus 3
 
