@@ -3,13 +3,13 @@ from typing import TypeVar
 T = TypeVar('T')
 D = TypeVar('D')
 NestedDict = dict[str, "NestedDict[T]" | T]
-PLUCK_NO_DEFAULT = object()
 
 
 def pluck(nested_dict: NestedDict[T],
           *key_paths: str,
           sep: str = '.',
-          default: D = PLUCK_NO_DEFAULT) -> tuple[NestedDict[T] | T | D, ...] | NestedDict[T] | T | D:
+          default: D = (PLUCK_NO_DEFAULT := object())  # noqa: N806 B008
+          ) -> tuple[NestedDict[T] | T | D, ...] | NestedDict[T] | T | D:
     if len(key_paths) > 1:
         return tuple(pluck(nested_dict, key_path, sep=sep, default=default) for key_path in key_paths)
 
@@ -52,6 +52,8 @@ def main():
 
     # Bonus 3
     test_equal(pluck(data, "category.name", "amount"), ("Music", 10.64))
+
+    print("Passed the tests.")
 
 
 if __name__ == "__main__":
