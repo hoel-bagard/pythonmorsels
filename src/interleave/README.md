@@ -1,7 +1,7 @@
 # [Interleave](https://www.pythonmorsels.com/exercises/db5f9e6add674a26aa384c6fe302400c)
 
 ### My notes
-
+- Use `itertools.zip_longest` if all the elements of all the iterables of a zip should appear.
 
 ### Usage
 Run the tests with:
