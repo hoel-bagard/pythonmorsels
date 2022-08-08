@@ -7,9 +7,8 @@ T2 = TypeVar("T2")
 
 
 def interleave_b1(iter1: Iterable[T1], iter2: Iterable[T2]) -> Iterable[T1 | T2]:
-    for elt1, elt2 in zip(iter1, iter2):
-        yield elt1
-        yield elt2
+    for elts in zip(iter1, iter2):
+        yield from elts
 
 
 def interleave(*iterables: Iterable[object]) -> Generator[object, None, None]:

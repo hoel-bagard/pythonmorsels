@@ -2,6 +2,7 @@
 
 ### My notes
 - Use `itertools.zip_longest` if all the elements of all the iterables of a zip should appear.
+- Use `yield from` to yield elements from an iterable one by one.
 
 ### Usage
 Run the tests with:
