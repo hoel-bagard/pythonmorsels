@@ -1,6 +1,9 @@
 # [Interleave](https://www.pythonmorsels.com/exercises/db5f9e6add674a26aa384c6fe302400c)
 
 ### My notes
+- Use the `self.__dict__` instead of an instance variable dict. This way, the `__getattr__` and `__setattr__` are available for free.
+  - If using that shortcut, then be careful to cast the original input into a dict (i.e. use `dict(input_dict)` and not `input_dict.copy()`). That's in case the input was an `OrderedDict`.
+- Use `dict.update` + `zip` instead of a for loop to set multiple elements of a dict at once.
 
 ### Usage
 Run the tests with:
