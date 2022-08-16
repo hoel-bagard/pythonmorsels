@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from collections.abc import Iterator
+from collections.abc import Iterable, Iterator
 from typing import Generic, Optional, TypeVar
 
 T = TypeVar('T')
@@ -9,15 +9,17 @@ class Unpacker(Generic[T]):
     def __init__(self, input_dict: Optional[dict[str, T]] = None):
         self.data_dict = input_dict.copy() if input_dict is not None else {}
 
-    def __setitem__(self, key: str | tuple[str], value: T | tuple[T]):
-        if isinstance(key, tuple):
-            value = list(value)
-            if len(key) != len(value):
-                raise ValueError
-            for k, v in zip(key, value, strict=True):
+    def __setitem__(self, key: str | tuple[str], value: T | Iterable[T]):
+        if isinstance(key, tuple) and isinstance(value, Iterable):
+            values = list(value)  # type: ignore
+            if len(key) != len(values):
+                raise ValueError(f"Number of key(s)={key} and value(s)={value} does not match.")
+            for k, v in zip(key, values, strict=True):
                 self.data_dict[k] = v
+        elif isinstance(key, str):
+            self.data_dict[key] = value  # type: ignore
         else:
-            self.data_dict[key] = value
+            raise ValueError(f"Number of key(s)={key} and value(s)={value} does not match.")
 
     def __getitem__(self, key: str | tuple[str]):
         if isinstance(key, tuple):
@@ -31,7 +33,7 @@ class Unpacker(Generic[T]):
         if key != "data_dict":
             self.data_dict[key] = value
         else:
-            super.__setattr__(self, key, value)
+            super.__setattr__(self, key, value)  # type: ignore
 
     def __iter__(self) -> Iterator[T]:
         yield from self.data_dict.values()
