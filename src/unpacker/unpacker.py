@@ -10,7 +10,7 @@ class Unpacker(Generic[T]):
     def __init__(self, input_dict: Optional[dict[str, T]] = None):
         self.__dict__ = dict(input_dict) if input_dict is not None else {}
 
-    def __setitem__(self, key: str | tuple[str], value: T | Iterable[T]):
+    def __setitem__(self, key: str | tuple[str], value: T | Iterable[T]) -> None:
         if isinstance(key, tuple):
             values: tuple[T, ...] = tuple(value)
             if len(key) != len(values):
@@ -19,7 +19,7 @@ class Unpacker(Generic[T]):
         else:
             self.__dict__[key] = value
 
-    def __getitem__(self, key: str | tuple[str]):
+    def __getitem__(self, key: str | tuple[str]) -> T | tuple[T, ...]:
         if isinstance(key, tuple):
             return tuple(self.__dict__[k] for k in key)
         return self.__dict__[key]
@@ -27,7 +27,7 @@ class Unpacker(Generic[T]):
     def __iter__(self) -> Iterator[T]:
         yield from self.__dict__.values()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{type(self).__name__}({', '.join([f'{key}={repr(value)}' for key, value in self.__dict__.items()])})"
 
 
@@ -36,19 +36,16 @@ class UnpackerV1(Generic[T]):
     def __init__(self, input_dict: Optional[dict[str, T]] = None):
         self.data_dict = input_dict.copy() if input_dict is not None else {}
 
-    def __setitem__(self, key: str | tuple[str], value: T | Iterable[T]):
-        if isinstance(key, tuple) and isinstance(value, Iterable):
-            values = tuple(value)  # type: ignore
+    def __setitem__(self, key: str | tuple[str], value: T | Iterable[T]) -> None:
+        if isinstance(key, tuple):
+            values: tuple[T, ...] = tuple(value)
             if len(key) != len(values):
                 raise ValueError(f"Number of key(s)={key} and value(s)={value} does not match.")
-            for k, v in zip(key, values, strict=True):
-                self.data_dict[k] = v
-        elif isinstance(key, str):
-            self.data_dict[key] = value
+            self.data_dict.update(zip(key, values))
         else:
-            raise ValueError(f"Number of key(s)={key} and value(s)={value} does not match.")
+            self.data_dict[key] = value
 
-    def __getitem__(self, key: str | tuple[str]):
+    def __getitem__(self, key: str | tuple[str]) -> T | tuple[T, ...]:
         if isinstance(key, tuple):
             return tuple(self.data_dict[k] for k in key)
         return self.data_dict[key]
@@ -65,8 +62,8 @@ class UnpackerV1(Generic[T]):
     def __iter__(self) -> Iterator[T]:
         yield from self.data_dict.values()
 
-    def __repr__(self):
-        return f"{type(self).__name__}({', '.join([f'{attr}={repr(val)}' for attr, val in self.data_dict.items()])})"
+    def __repr__(self) -> str:
+        return f"{type(self).__name__}({', '.join([f'{key}={repr(value)}' for key, value in self.__dict__.items()])})"
 
 
 def assert_equal(res: object, expected_res: object) -> None:
