@@ -1,11 +1,15 @@
 from collections import OrderedDict
+from collections.abc import Iterator
+from typing import Generic, Optional, TypeVar
+
+T = TypeVar('T')
 
 
-class Unpacker:
-    def __init__(self, input_dict: OrderedDict | dict):
-        self.data_dict = input_dict
+class Unpacker(Generic[T]):
+    def __init__(self, input_dict: Optional[dict[str, T]] = None):
+        self.data_dict = input_dict.copy() if input_dict is not None else {}
 
-    def __setitem__(self, key: str | tuple[str], value: object | tuple[object]):
+    def __setitem__(self, key: str | tuple[str], value: T | tuple[T]):
         if isinstance(key, tuple):
             for k, v in zip(key, value):
                 self.data_dict[k] = v
@@ -17,10 +21,16 @@ class Unpacker:
             return tuple(self.data_dict[k] for k in key)
         return self.data_dict[key]
 
-    def __getattr__(self, key: str):
+    def __getattr__(self, key: str) -> T:
         return self.data_dict[key]
 
-    def __iter__(self):
+    def __setattr__(self, key: str, value: T) -> None:
+        if key != "data_dict":
+            self.data_dict[key] = value
+        else:
+            super.__setattr__(self, key, value)
+
+    def __iter__(self) -> Iterator[T]:
         yield from self.data_dict.values()
 
     def __repr__(self):

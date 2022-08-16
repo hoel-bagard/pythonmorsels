@@ -1,16 +1,14 @@
 # [Interleave](https://www.pythonmorsels.com/exercises/db5f9e6add674a26aa384c6fe302400c)
 
 ### My notes
-- Use `itertools.zip_longest` if all the elements of all the iterables of a zip should appear.
-- Use `yield from` to yield elements from an iterable one by one.
 
 ### Usage
 Run the tests with:
-- For all tests: `python -m pytest src/interleave`.
-- For only the base exercise: `python -m pytest src/interleave -m "not (bonus1 or bonus2 or bonus3)"`
-- For the base exercise and the first bonus: `python -m pytest src/interleave -m "not (bonus2 or bonus3)"`
+- For all tests: `python -m pytest src/unpacker`.
+- For only the base exercise: `python -m pytest src/unpacker -m "not (bonus1 or bonus2 or bonus3)"`
+- For the base exercise and the first bonus: `python -m pytest src/unpacker -m "not (bonus2 or bonus3)"`
 
-Run the main file with `python src/interleave/interleave.py`.
+Run the main file with `python src/unpacker/unpacker.py`.
 
 ### Description:
 #### Base problem
