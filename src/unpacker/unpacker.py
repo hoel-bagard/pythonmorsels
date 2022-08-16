@@ -11,7 +11,10 @@ class Unpacker(Generic[T]):
 
     def __setitem__(self, key: str | tuple[str], value: T | tuple[T]):
         if isinstance(key, tuple):
-            for k, v in zip(key, value):
+            value = list(value)
+            if len(key) != len(value):
+                raise ValueError
+            for k, v in zip(key, value, strict=True):
                 self.data_dict[k] = v
         else:
             self.data_dict[key] = value
@@ -34,7 +37,7 @@ class Unpacker(Generic[T]):
         yield from self.data_dict.values()
 
     def __repr__(self):
-        return f"{type(self).__name__}({', '.join([f'{attr}={value}' for attr, value in self.data_dict.items()])})"
+        return f"{type(self).__name__}({', '.join([f'{attr}={repr(val)}' for attr, val in self.data_dict.items()])})"
 
 
 def assert_equal(res: object, expected_res: object) -> None:
