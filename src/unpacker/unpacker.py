@@ -1,3 +1,4 @@
+# pyright: reportGeneralTypeIssues=false
 from collections import OrderedDict
 from collections.abc import Iterable, Iterator
 from typing import Generic, Optional, TypeVar
@@ -7,17 +8,43 @@ T = TypeVar('T')
 
 class Unpacker(Generic[T]):
     def __init__(self, input_dict: Optional[dict[str, T]] = None):
+        self.__dict__ = dict(input_dict) if input_dict is not None else {}
+
+    def __setitem__(self, key: str | tuple[str], value: T | Iterable[T]):
+        if isinstance(key, tuple):
+            values: tuple[T, ...] = tuple(value)
+            if len(key) != len(values):
+                raise ValueError(f"Number of key(s)={key} and value(s)={values} does not match.")
+            self.__dict__.update(zip(key, values))
+        else:
+            self.__dict__[key] = value
+
+    def __getitem__(self, key: str | tuple[str]):
+        if isinstance(key, tuple):
+            return tuple(self.__dict__[k] for k in key)
+        return self.__dict__[key]
+
+    def __iter__(self) -> Iterator[T]:
+        yield from self.__dict__.values()
+
+    def __repr__(self):
+        return f"{type(self).__name__}({', '.join([f'{key}={repr(value)}' for key, value in self.__dict__.items()])})"
+
+
+class UnpackerV1(Generic[T]):
+    """First version I wrote of the Unpacker class. This is more verbose, but makes pyright happier."""
+    def __init__(self, input_dict: Optional[dict[str, T]] = None):
         self.data_dict = input_dict.copy() if input_dict is not None else {}
 
     def __setitem__(self, key: str | tuple[str], value: T | Iterable[T]):
         if isinstance(key, tuple) and isinstance(value, Iterable):
-            values = list(value)  # type: ignore
+            values = tuple(value)  # type: ignore
             if len(key) != len(values):
                 raise ValueError(f"Number of key(s)={key} and value(s)={value} does not match.")
             for k, v in zip(key, values, strict=True):
                 self.data_dict[k] = v
         elif isinstance(key, str):
-            self.data_dict[key] = value  # type: ignore
+            self.data_dict[key] = value
         else:
             raise ValueError(f"Number of key(s)={key} and value(s)={value} does not match.")
 
@@ -33,7 +60,7 @@ class Unpacker(Generic[T]):
         if key != "data_dict":
             self.data_dict[key] = value
         else:
-            super.__setattr__(self, key, value)  # type: ignore
+            super().__setattr__(self, key, value)
 
     def __iter__(self) -> Iterator[T]:
         yield from self.data_dict.values()
@@ -51,10 +78,10 @@ def main():
     d = {'hello': 4, 'hi': 5}
     u = Unpacker(d)
     assert_equal(u['hello'], 4)
-    assert_equal(u.hi, 5)
+    assert_equal(u.hi, 5)  # type: ignore
 
     u['hello'] = 8
-    assert_equal(u.hello, 8)
+    assert_equal(u.hello, 8)  # type: ignore
     u.hello = 5
     assert_equal(u.hello, 5)
 
