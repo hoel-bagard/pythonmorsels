@@ -88,4 +88,3 @@ def test_immutable(vector_sample: Vector):
     with pytest.raises(AttributeError):
         vector_sample.x = 4
     assert vector_sample.x == 1
-
