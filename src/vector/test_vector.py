@@ -82,11 +82,10 @@ def test_scaling():
     assert (v4.x, v4.y, v4.z) == (8, 10, 12)
     assert (v5.x, v5.y, v5.z) == (2, 4, 6)
 
-    # # To test bonus 3, comment out the next line
-    # @unittest.expectedFailure
-    # def test_immutable(self):
-    #     v1 = Vector(1, 2, 3)
-    #     with self.assertRaises(Exception):
-    #         v1.x = 4
-    #     self.assertEqual(v1.x, 1)
+
+@pytest.mark.bonus3
+def test_immutable(vector_sample: Vector):
+    with pytest.raises(AttributeError):
+        vector_sample.x = 4
+    assert vector_sample.x == 1
 

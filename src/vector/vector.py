@@ -6,7 +6,7 @@ from typing import TypeVar
 TVector = TypeVar("TVector", bound="Vector")
 
 
-@dataclass(slots=True)
+@dataclass(slots=True, frozen=True)
 class Vector:
     x: float
     y: float
@@ -72,6 +72,16 @@ def main():
     assert_equal(Vector(1, 2, 3) * 2, Vector(2, 4, 6))
     assert_equal(Vector(1, 2, 3) / 2, Vector(0.5, 1, 1.5))
     print("Passed bonus 2")
+
+    # Bonus 2
+    v = Vector(1, 2, 3)
+    try:
+        v.x = 4
+        raise TypeError("Vectors should be immutable")
+    except AttributeError:
+        pass
+    print("Passed bonus 3")
+
     print("Passed the tests")
 
 
