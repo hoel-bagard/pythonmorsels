@@ -1,47 +1,47 @@
 from collections.abc import Iterator
 from dataclasses import astuple, dataclass
-from numbers import Number
-from typing import TypeVar
+from typing import Union
+# from typing import TypeVar
 
 
-TVector = TypeVar("TVector", bound="Vector")
+# TVector = TypeVar("TVector", bound="Vector")
 
 
 @dataclass(slots=True, frozen=True)
 class Vector:
-    x: Number
-    y: Number
-    z: Number
+    x: float
+    y: float
+    z: float
 
-    def __iter__(self) -> Iterator[Number]:
+    def __iter__(self) -> Iterator[float]:
         yield from astuple(self)
 
-    def __add__(self, other: TVector | object) -> TVector:
+    def __add__(self, other: Union["Vector", object]) -> "Vector":
         if isinstance(other, Vector):
             return Vector(self.x + other.x,
                           self.y + other.y,
                           self.z + other.z)
         return NotImplemented
 
-    def __sub__(self, other: TVector | object) -> TVector:
+    def __sub__(self, other: Union["Vector", object]) -> "Vector":
         if isinstance(other, Vector):
             return Vector(self.x - other.x,
                           self.y - other.y,
                           self.z - other.z)
         return NotImplemented
 
-    def __mul__(self, mult_factor: Number | object) -> TVector:
-        if isinstance(mult_factor, Number):
+    def __mul__(self, mult_factor: int | float | object) -> "Vector":
+        if isinstance(mult_factor, (float, int)):
             return Vector(self.x * mult_factor,
                           self.y * mult_factor,
                           self.z * mult_factor)
         return NotImplemented
 
-    def __rmul__(self, mult_factor: Number | object) -> TVector:
+    def __rmul__(self, mult_factor: int | float | object) -> "Vector":
         return self * mult_factor
 
-    def __truediv__(self, div_factor: Number | object) -> TVector:
-        if isinstance(div_factor, Number):
+    def __truediv__(self, div_factor: int | float | object) -> "Vector":
+        if isinstance(div_factor, (float, int)):
             return Vector(self.x / div_factor,
                           self.y / div_factor,
                           self.z / div_factor)

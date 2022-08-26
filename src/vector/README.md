@@ -2,6 +2,7 @@
 
 ### My notes
 - Use `Number` when typing/testing for any type of number, rather than float or int (`from numbers import Number`).
+  - (pyright very much does not like it though, as not all operations are defined on `Number`)
 - Use `astuple` from the dataset package to convert a dataclass to a tuple (if `__iter__` has been defined a simple `tuple()` call is enough).
 
 ### Usage
