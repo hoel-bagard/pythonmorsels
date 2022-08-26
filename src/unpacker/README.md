@@ -1,4 +1,4 @@
-# [Interleave](https://www.pythonmorsels.com/exercises/db5f9e6add674a26aa384c6fe302400c)
+# [Unpacker](https://www.pythonmorsels.com/exercises/2f9e092a6f474151abbab81dc5414bc2)
 
 ### My notes
 - Use the `self.__dict__` instead of an instance variable dict. This way, the `__getattr__` and `__setattr__` are available for free.
