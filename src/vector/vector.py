@@ -1,5 +1,6 @@
 from collections.abc import Iterator
-from dataclasses import dataclass
+from dataclasses import astuple, dataclass
+from numbers import Number
 from typing import TypeVar
 
 
@@ -8,12 +9,12 @@ TVector = TypeVar("TVector", bound="Vector")
 
 @dataclass(slots=True, frozen=True)
 class Vector:
-    x: float
-    y: float
-    z: float
+    x: Number
+    y: Number
+    z: Number
 
-    def __iter__(self) -> Iterator[float]:
-        return iter((self.x, self.y, self.z))
+    def __iter__(self) -> Iterator[Number]:
+        yield from astuple(self)
 
     def __add__(self, other: TVector | object) -> TVector:
         if isinstance(other, Vector):
@@ -29,18 +30,18 @@ class Vector:
                           self.z - other.z)
         return NotImplemented
 
-    def __mul__(self, mult_factor: int | float | object) -> TVector:
-        if isinstance(mult_factor, (float, int)):
+    def __mul__(self, mult_factor: Number | object) -> TVector:
+        if isinstance(mult_factor, Number):
             return Vector(self.x * mult_factor,
                           self.y * mult_factor,
                           self.z * mult_factor)
         return NotImplemented
 
-    def __rmul__(self, mult_factor: int | float | object) -> TVector:
+    def __rmul__(self, mult_factor: Number | object) -> TVector:
         return self * mult_factor
 
-    def __truediv__(self, div_factor: int | float | object) -> TVector:
-        if isinstance(div_factor, (float, int)):
+    def __truediv__(self, div_factor: Number | object) -> TVector:
+        if isinstance(div_factor, Number):
             return Vector(self.x / div_factor,
                           self.y / div_factor,
                           self.z / div_factor)

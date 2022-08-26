@@ -1,6 +1,8 @@
 # [Vecotr](https://www.pythonmorsels.com/exercises/ced757b8a1bd400bb983aa8a2eb0e8fe)
 
 ### My notes
+- Use `Number` when typing/testing for any type of number, rather than float or int (`from numbers import Number`).
+- Use `astuple` from the dataset package to convert a dataclass to a tuple (if `__iter__` has been defined a simple `tuple()` call is enough).
 
 ### Usage
 Run the tests with:
