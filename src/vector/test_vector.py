@@ -60,27 +60,27 @@ def test_memory_efficient_attributes(vector_sample: Vector):
     with pytest.raises((AttributeError, TypeError)):
         vector_sample.__dict__
 
-    # # To test bonus 1, comment out the next line
-    # @unittest.expectedFailure
-    # def test_shifting(self):
-    #     v1 = Vector(1, 2, 3)
-    #     v2 = Vector(4, 5, 6)
-    #     v3 = v2 + v1
-    #     v4 = v3 - v1
-    #     self.assertEqual((v3.x, v3.y, v3.z), (5, 7, 9))
-    #     self.assertEqual((v4.x, v4.y, v4.z), (v2.x, v2.y, v2.z))
 
-    # # To test bonus 2, comment out the next line
-    # @unittest.expectedFailure
-    # def test_scaling(self):
-    #     v1 = Vector(1, 2, 3)
-    #     v2 = Vector(4, 5, 6)
-    #     v3 = v1 * 4
-    #     v4 = 2 * v2
-    #     v5 = v3 / 2
-    #     self.assertEqual((v3.x, v3.y, v3.z), (4, 8, 12))
-    #     self.assertEqual((v4.x, v4.y, v4.z), (8, 10, 12))
-    #     self.assertEqual((v5.x, v5.y, v5.z), (2, 4, 6))
+@pytest.mark.bonus1
+def test_shifting():
+    v1 = Vector(1, 2, 3)
+    v2 = Vector(4, 5, 6)
+    v3 = v2 + v1
+    v4 = v3 - v1
+    assert (v3.x, v3.y, v3.z) == (5, 7, 9)
+    assert (v4.x, v4.y, v4.z) == (v2.x, v2.y, v2.z)
+
+
+@pytest.mark.bonus2
+def test_scaling():
+    v1 = Vector(1, 2, 3)
+    v2 = Vector(4, 5, 6)
+    v3 = v1 * 4
+    v4 = 2 * v2
+    v5 = v3 / 2
+    assert (v3.x, v3.y, v3.z) == (4, 8, 12)
+    assert (v4.x, v4.y, v4.z) == (8, 10, 12)
+    assert (v5.x, v5.y, v5.z) == (2, 4, 6)
 
     # # To test bonus 3, comment out the next line
     # @unittest.expectedFailure
