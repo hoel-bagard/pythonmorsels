@@ -75,7 +75,7 @@ The get_number_lines function should accept seconds (as an integer) and return a
    ██  ██     ██     ██     ██
    ██  ██████    ██████     ██
 ```
-Note that the list of lines returned by get_number_lines doesn't include any newline characters.
+Note that the list of lines returned by `get_number_lines` doesn't include any newline characters.
 
 The duration function should accept a string in the format Dm, Ds, or DmDs where D represents one or more digits. The number of seconds represented by the given minutes or seconds should be returned:
 
