@@ -4,7 +4,7 @@ import shutil
 import time
 
 
-digit_to_glyph = {
+digit_to_glyph: dict[str, str] = {
     "0": "██████\n██  ██\n██  ██\n██  ██\n██████",
     "1": "   ██ \n  ███ \n   ██ \n   ██ \n   ██ ",
     "2": "██████\n    ██\n██████\n██    \n██████",
@@ -22,28 +22,19 @@ CLEAR = "\033[H\033[J"  # Move cursor to top corner and clear screen
 
 
 def duration(duration_str: str) -> int:
-    m = re.search(r"^(\d+)([ms])(\d*)s?$", duration_str)
-    if m is None:
+    match = re.search(r"^(?:(\d+)m)?(?:(\d+)s)?$", duration_str)
+
+    if match is None:
         raise ValueError("Invalid duration: {duration_str}")
 
-    minutes = int(m.group(1)) if m.group(2) == 'm' else 0
-    seconds = int(m.group(1)) if m.group(2) == 's' else (int(m.group(3)) if len(m.group(3)) > 0 else 0)
+    minutes, seconds = match.groups(default=0)
 
-    return 60 * minutes + seconds
+    return 60 * int(minutes) + int(seconds)
 
 
 def get_number_lines(seconds: int) -> list[str]:
-    minutes = f"{seconds//60:02d}"
-    seconds = f"{seconds%60:02d}"
-
-    result = [" ".join(line) for line in zip(*[
-        digit_to_glyph[minutes[0]].split('\n'),
-        digit_to_glyph[minutes[1]].split('\n'),
-        digit_to_glyph[':'].split('\n'),
-        digit_to_glyph[seconds[0]].split('\n'),
-        digit_to_glyph[seconds[1]].split('\n'),
-    ])]
-    return result
+    timestamp = f"{seconds//60:02d}:{seconds%60:02d}"
+    return [" ".join(line_parts) for line_parts in zip(*[digit_to_glyph[char].splitlines() for char in timestamp])]
 
 
 def print_full_screen(lines: list[str]) -> None:
@@ -62,21 +53,16 @@ def assert_equal(res: object, expected_res: object) -> None:
     assert res == expected_res, f"Wrong result, got:\n\t{res}\nbut expected\n\t {expected_res}"
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("countdown", type=str, help="Countdown duration, format <min>m<seconds>s")
-    args = parser.parse_args()
-
-    countdown: int = args.countdown
+def main_morsels(countdown: str) -> None:
     seconds = duration(countdown)
 
-    for remaining_time in range(seconds, -1, -1):
-        print_full_screen(get_number_lines(remaining_time))
-        time.sleep(1)
-
-
-if __name__ == "__main__":
-    main()
+    print("\x1b[?25l", end='')  # Hide cursor
+    try:
+        for remaining_time in range(seconds, -1, -1):
+            print_full_screen(get_number_lines(remaining_time))
+            time.sleep(1)
+    finally:
+        print("\x1b[?25h", end='')  # Show cursor
 
 
 def main_test():
@@ -104,14 +90,22 @@ def main_test():
                   "   ██  ██████     █████ ██████",
                   "   ██  ██     ██     ██     ██",
                   "   ██  ██████    ██████     ██"])
-    # Bonus 1
-    print("Not testing the first bonus.")
-    # print_full_screen(get_number_lines(754))
 
-    # Bonus 2
-    print("Testing the second bonus.")
-
-    # Bonus 3
-    print("Testing the third bonus.")
-
+    print("Not testing the bonuses.")
     print("Passed the tests!")
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("countdown", type=str, help="Countdown duration, format <min>m<seconds>s")
+    parser.add_argument("--local_tests", "-t", action="store_true",
+                        help="Use this flag to run some tests on the base exercise.")
+    args = parser.parse_args()
+
+    countdown: str = args.countdown
+    local_testing: bool = args.local_tests
+
+    if local_testing:
+        main_test()
+    else:
+        main_morsels(countdown)

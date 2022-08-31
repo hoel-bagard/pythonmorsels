@@ -1,14 +1,15 @@
 import os
-import re
-import shlex
+# import re
+# import shlex
 import shutil
-import sys
-from contextlib import redirect_stderr, redirect_stdout
+# import sys
+# from contextlib import redirect_stderr, redirect_stdout
+from contextlib import redirect_stdout
 from importlib import reload
-from importlib.machinery import SourceFileLoader
-from importlib.util import module_from_spec, spec_from_loader
+# from importlib.machinery import SourceFileLoader
+# from importlib.util import module_from_spec, spec_from_loader
 from io import StringIO
-from typing import Callable
+from typing import Callable, Optional
 from unittest.mock import patch
 
 import pytest
@@ -38,7 +39,7 @@ class TestDuration:
         assert countdown.duration(duration_str) == duration_value
 
     @pytest.mark.parametrize("invalid_duration_str", ["10x", "10y5z", "10m5x", "ms", "10"])
-    def test_invalid_duration(self, invalid_duration_str):
+    def test_invalid_duration(self, invalid_duration_str: str):
         with pytest.raises(ValueError):
             countdown.duration(invalid_duration_str)
 
@@ -102,17 +103,17 @@ class TestGetNumberLines:
 class TestPrintFullScreen:
     """Tests for print_full_screen."""
 
-    def fake_size(self, columns: int, lines: int) -> Callable:
-        def get_terminal_size(fd=None):
+    def fake_size(self, columns: int, lines: int) -> Callable[[], tuple[int, int]]:
+        def get_terminal_size(fd: Optional[str] = None):
             return os.terminal_size([columns, lines])
         return get_terminal_size
 
-    def assert_lines_equal(self, actual_text, expected_text):
-        actual_lines = [
+    def assert_lines_equal(self, actual_text: str, expected_text: str):
+        actual_lines: list[str] = [
             line.rstrip()
             for line in actual_text.rstrip().splitlines()
         ]
-        expected_lines = [
+        expected_lines: list[str] = [
             line.rstrip()
             for line in expected_text.rstrip().splitlines()
         ]
@@ -195,53 +196,6 @@ class TestPrintFullScreen:
 #                 reload(shutil)
 #                 reload(countdown)
 #                 self.assertOutput(run_program("countdown.py 3s"), """
-
-
-
-
-
-
-#                ██████ ██████    ██████ ██████
-#                ██  ██ ██  ██ ██ ██  ██     ██
-#                ██  ██ ██  ██    ██  ██  █████
-#                ██  ██ ██  ██ ██ ██  ██     ██
-#                ██████ ██████    ██████ ██████
-
-
-
-
-
-
-
-#                ██████ ██████    ██████ ██████
-#                ██  ██ ██  ██ ██ ██  ██     ██
-#                ██  ██ ██  ██    ██  ██ ██████
-#                ██  ██ ██  ██ ██ ██  ██ ██
-#                ██████ ██████    ██████ ██████
-
-
-
-
-
-
-
-#                ██████ ██████    ██████    ██
-#                ██  ██ ██  ██ ██ ██  ██   ███
-#                ██  ██ ██  ██    ██  ██    ██
-#                ██  ██ ██  ██ ██ ██  ██    ██
-#                ██████ ██████    ██████    ██
-
-
-
-
-
-
-
-#                ██████ ██████    ██████ ██████
-#                ██  ██ ██  ██ ██ ██  ██ ██  ██
-#                ██  ██ ██  ██    ██  ██ ██  ██
-#                ██  ██ ██  ██ ██ ██  ██ ██  ██
-#                ██████ ██████    ██████ ██████
 #                 """)
 #         self.assertEqual(sleep_patch.slept, 4, "3 seconds = 4 sleeps")
 
