@@ -1,5 +1,7 @@
+import argparse
 import re
 import shutil
+import time
 
 
 digit_to_glyph = {
@@ -61,6 +63,23 @@ def assert_equal(res: object, expected_res: object) -> None:
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("countdown", type=str, help="Countdown duration, format <min>m<seconds>s")
+    args = parser.parse_args()
+
+    countdown: int = args.countdown
+    seconds = duration(countdown)
+
+    for remaining_time in range(seconds, -1, -1):
+        print_full_screen(get_number_lines(remaining_time))
+        time.sleep(1)
+
+
+if __name__ == "__main__":
+    main()
+
+
+def main_test():
     # Base exercise:
     print("Testing the base exercise.")
     assert_equal(duration("5m"), 300)
@@ -96,7 +115,3 @@ def main():
     print("Testing the third bonus.")
 
     print("Passed the tests!")
-
-
-if __name__ == "__main__":
-    main()

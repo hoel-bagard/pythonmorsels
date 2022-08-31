@@ -183,5 +183,3 @@ If you're manually testing in the Windows command prompt and not seeing the scre
 
 #### Bonus 3
 For the third bonus, your countdown.py script should hide the cursor in your terminal when the program starts and reveal it at the end. Make sure the cursor is revealed again even if the program exits prematurely.
-
-### Hints

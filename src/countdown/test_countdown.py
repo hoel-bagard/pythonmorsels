@@ -1,16 +1,15 @@
-from contextlib import redirect_stdout, redirect_stderr
-from io import StringIO
+import os
+import re
+import shlex
+import shutil
+import sys
+from contextlib import redirect_stderr, redirect_stdout
 from importlib import reload
 from importlib.machinery import SourceFileLoader
 from importlib.util import module_from_spec, spec_from_loader
-import os
-import shlex
-import shutil
-import re
-import sys
-from textwrap import dedent, indent
+from io import StringIO
+from typing import Callable
 from unittest.mock import patch
-
 
 import pytest
 
@@ -44,7 +43,7 @@ class TestDuration:
             countdown.duration(invalid_duration_str)
 
 
-class TestGetNumberLines():
+class TestGetNumberLines:
     """Tests for get_number_lines."""
 
     @pytest.mark.parametrize("seconds, representation",
@@ -100,12 +99,10 @@ class TestGetNumberLines():
 
 
 @pytest.mark.bonus1
-class TestPrintFullScreen():
+class TestPrintFullScreen:
     """Tests for print_full_screen."""
 
-    maxDiff = None
-
-    def fake_size(self, columns, lines):
+    def fake_size(self, columns: int, lines: int) -> Callable:
         def get_terminal_size(fd=None):
             return os.terminal_size([columns, lines])
         return get_terminal_size
@@ -165,18 +162,9 @@ class TestPrintFullScreen():
         assert output[6:] == '\n' * lines_before + '\n'.join(' ' * indentation + line for line in lines) + '\n'
 
 
-# # To test bonus 2, comment out the next line
-# @unittest.expectedFailure
-# class CountdownModuleTests(unittest.TestCase):
-
+# @pytest.mark.bonus2
+# class CountdownModuleTests:
 #     """Tests for countdown.py."""
-
-#     maxDiff = None
-
-#     def fake_size(self, columns, lines):
-#         def get_terminal_size(fd=None):
-#             return os.terminal_size([columns, lines])
-#         return get_terminal_size
 
 #     def assertOutput(self, actual_text, expected_text, allow_wiggle=True):
 #         expected_text = expected_text.rstrip()
