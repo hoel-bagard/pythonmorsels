@@ -55,7 +55,7 @@ The values in that dictionary represent 5-line glyphs for 0 through 9 and :.
 ██  ██
 ██████
 ```
-The get_number_lines function should accept seconds (as an integer) and return a list of lines representing those large number glyphs in the format MM:SS:
+The `get_number_lines` function should accept seconds (as an integer) and return a list of lines representing those large number glyphs in the format MM:SS:
 
 ```python
 >>> get_number_lines(15)

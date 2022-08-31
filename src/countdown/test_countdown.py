@@ -44,93 +44,59 @@ class TestDuration:
             countdown.duration(invalid_duration_str)
 
 
-# class GetNumberLines(unittest.TestCase):
+class TestGetNumberLines():
+    """Tests for get_number_lines."""
 
-#     """Tests for get_number_lines."""
+    @pytest.mark.parametrize("seconds, representation",
+                             [(10, ["██████ ██████       ██  ██████",
+                                    "██  ██ ██  ██ ██   ███  ██  ██",
+                                    "██  ██ ██  ██       ██  ██  ██",
+                                    "██  ██ ██  ██ ██    ██  ██  ██",
+                                    "██████ ██████       ██  ██████"])])
+    def test_seconds_only(self, seconds: int, representation: list[str]):
+        assert countdown.get_number_lines(seconds) == representation
 
-#     maxDiff = None
+    @pytest.mark.parametrize("seconds, representation",
+                             [(60, ["██████    ██     ██████ ██████",
+                                    "██  ██   ███  ██ ██  ██ ██  ██",
+                                    "██  ██    ██     ██  ██ ██  ██",
+                                    "██  ██    ██  ██ ██  ██ ██  ██",
+                                    "██████    ██     ██████ ██████"]),
 
-#     def get(self, seconds):
-#         """Call get_number_lines, strip spaces, and join together."""
-#         return "\n".join([
-#             line.strip(" ")
-#             for line in countdown.get_number_lines(seconds)
-#         ])
+                              (2700, ["██  ██ ██████    ██████ ██████",
+                                      "██  ██ ██     ██ ██  ██ ██  ██",
+                                      "██████ ██████    ██  ██ ██  ██",
+                                      "    ██     ██ ██ ██  ██ ██  ██",
+                                      "    ██ ██████    ██████ ██████"]),
 
-#     def assertNumberLines(self, actual_lines, expected_text):
-#         expected_text = undent(expected_text)
-#         actual_text = dedent("\n".join([
-#             line.rstrip(" ")
-#             for line in actual_lines
-#         ]))
-#         if actual_text != expected_text:
-#             raise AssertionError(
-#                 f"Expected:\n{expected_text}\n\n"
-#                 f"Actual:\n{actual_text}"
-#             )
+                              (540, ["██████ ██████    ██████ ██████",
+                                     "██  ██ ██  ██ ██ ██  ██ ██  ██",
+                                     "██  ██ ██████    ██  ██ ██  ██",
+                                     "██  ██     ██ ██ ██  ██ ██  ██",
+                                     "██████  █████    ██████ ██████"])])
+    def test_minutes_only(self, seconds: int, representation: list[str]):
+        assert countdown.get_number_lines(seconds) == representation
 
-#     def test_10_seconds(self):
-#         self.assertNumberLines(countdown.get_number_lines(10), """
-#             ██████ ██████       ██  ██████
-#             ██  ██ ██  ██ ██   ███  ██  ██
-#             ██  ██ ██  ██       ██  ██  ██
-#             ██  ██ ██  ██ ██    ██  ██  ██
-#             ██████ ██████       ██  ██████
-#         """)
+    @pytest.mark.parametrize("seconds, representation",
+                             [(1024, ["   ██  ██████    ██████ ██  ██",
+                                      "  ███      ██ ██ ██  ██ ██  ██",
+                                      "   ██     ██     ██  ██ ██████",
+                                      "   ██    ██   ██ ██  ██     ██",
+                                      "   ██    ██      ██████     ██"]),
 
-#     def test_60_seconds(self):
-#         self.assertNumberLines(countdown.get_number_lines(60), """
-#             ██████    ██     ██████ ██████
-#             ██  ██   ███  ██ ██  ██ ██  ██
-#             ██  ██    ██     ██  ██ ██  ██
-#             ██  ██    ██  ██ ██  ██ ██  ██
-#             ██████    ██     ██████ ██████
-#         """)
+                              (486, ["██████  ████     ██████ ██████",
+                                     "██  ██ ██  ██ ██ ██  ██ ██    ",
+                                     "██  ██  ████     ██  ██ ██████",
+                                     "██  ██ ██  ██ ██ ██  ██ ██  ██",
+                                     "██████  ████     ██████ ██████"]),
 
-#     def test_45_minutes(self):
-#         self.assertNumberLines(countdown.get_number_lines(2700), """
-#             ██  ██ ██████    ██████ ██████
-#             ██  ██ ██     ██ ██  ██ ██  ██
-#             ██████ ██████    ██  ██ ██  ██
-#                 ██     ██ ██ ██  ██ ██  ██
-#                 ██ ██████    ██████ ██████
-#         """)
-
-#     def test_17_minutes_and_four_seconds(self):
-#         self.assertNumberLines(countdown.get_number_lines(1024), """
-#              ██  ██████    ██████ ██  ██
-#             ███      ██ ██ ██  ██ ██  ██
-#              ██     ██     ██  ██ ██████
-#              ██    ██   ██ ██  ██     ██
-#              ██    ██      ██████     ██
-#         """)
-
-#     def test_8_minutes_and_6_seconds(self):
-#         self.assertNumberLines(countdown.get_number_lines(486), """
-#             ██████  ████     ██████ ██████
-#             ██  ██ ██  ██ ██ ██  ██ ██
-#             ██  ██  ████     ██  ██ ██████
-#             ██  ██ ██  ██ ██ ██  ██ ██  ██
-#             ██████  ████     ██████ ██████
-#         """)
-
-#     def test_9_minutes(self):
-#         self.assertNumberLines(countdown.get_number_lines(540), """
-#             ██████ ██████    ██████ ██████
-#             ██  ██ ██  ██ ██ ██  ██ ██  ██
-#             ██  ██ ██████    ██  ██ ██  ██
-#             ██  ██     ██ ██ ██  ██ ██  ██
-#             ██████  █████    ██████ ██████
-#         """)
-
-#     def test_3478(self):
-#         self.assertNumberLines(countdown.get_number_lines(2118), """
-#             ██████ ██████       ██   ████
-#                 ██ ██     ██   ███  ██  ██
-#              █████ ██████       ██   ████
-#                 ██     ██ ██    ██  ██  ██
-#             ██████ ██████       ██   ████
-#         """)
+                              (2118, ["██████ ██████       ██   ████ ",
+                                      "    ██ ██     ██   ███  ██  ██",
+                                      " █████ ██████       ██   ████ ",
+                                      "    ██     ██ ██    ██  ██  ██",
+                                      "██████ ██████       ██   ████ "])])
+    def test_minutes_and_seconds(self, seconds: int, representation: list[str]):
+        assert countdown.get_number_lines(seconds) == representation
 
 
 # # To test bonus 1, comment out the next line
@@ -478,10 +444,6 @@ class TestDuration:
 
 #     def raise_at(self, seconds, exception):
 #         self.raises[seconds] = exception
-
-
-# class DummyException(Exception):
-#     """No code will ever raise this exception."""
 
 
 # def run_program(arguments="", raises=DummyException):

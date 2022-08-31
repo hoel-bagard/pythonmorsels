@@ -1,5 +1,19 @@
 import re
 
+digit_to_glyph = {
+    "0": "██████\n██  ██\n██  ██\n██  ██\n██████",
+    "1": "   ██ \n  ███ \n   ██ \n   ██ \n   ██ ",
+    "2": "██████\n    ██\n██████\n██    \n██████",
+    "3": "██████\n    ██\n █████\n    ██\n██████",
+    "4": "██  ██\n██  ██\n██████\n    ██\n    ██",
+    "5": "██████\n██    \n██████\n    ██\n██████",
+    "6": "██████\n██    \n██████\n██  ██\n██████",
+    "7": "██████\n    ██\n   ██ \n  ██  \n  ██  ",
+    "8": " ████ \n██  ██\n ████ \n██  ██\n ████ ",
+    "9": "██████\n██  ██\n██████\n    ██\n █████",
+    ":": "  \n██\n  \n██\n  ",
+}
+
 
 def duration(duration_str: str) -> int:
     m = re.search(r"^(\d+)([ms])(\d*)s?$", duration_str)
@@ -10,6 +24,20 @@ def duration(duration_str: str) -> int:
     seconds = int(m.group(1)) if m.group(2) == 's' else (int(m.group(3)) if len(m.group(3)) > 0 else 0)
 
     return 60 * minutes + seconds
+
+
+def get_number_lines(seconds: int) -> list[str]:
+    minutes = f"{seconds//60:02d}"
+    seconds = f"{seconds%60:02d}"
+
+    result = [" ".join(line) for line in zip(*[
+        digit_to_glyph[minutes[0]].split('\n'),
+        digit_to_glyph[minutes[1]].split('\n'),
+        digit_to_glyph[':'].split('\n'),
+        digit_to_glyph[seconds[0]].split('\n'),
+        digit_to_glyph[seconds[1]].split('\n'),
+    ])]
+    return result
 
 
 def assert_equal(res: object, expected_res: object) -> None:
@@ -23,13 +51,24 @@ def main():
     assert_equal(duration("2m30s"), 150)
     assert_equal(duration("5s"), 5)
     assert_equal(duration("10m"), 600)
-
     try:
         duration("100xy")
         print("Should have raised a ValueError but did not.")
     except ValueError:
         pass
 
+    assert_equal(get_number_lines(15),
+                 ["██████ ██████       ██  ██████",
+                  "██  ██ ██  ██ ██   ███  ██    ",
+                  "██  ██ ██  ██       ██  ██████",
+                  "██  ██ ██  ██ ██    ██      ██",
+                  "██████ ██████       ██  ██████"])
+    assert_equal(get_number_lines(754),
+                 ["   ██  ██████    ██████ ██  ██",
+                  "  ███      ██ ██     ██ ██  ██",
+                  "   ██  ██████     █████ ██████",
+                  "   ██  ██     ██     ██     ██",
+                  "   ██  ██████    ██████     ██"])
     # Bonus 1
     print("Testing the first bonus.")
 
