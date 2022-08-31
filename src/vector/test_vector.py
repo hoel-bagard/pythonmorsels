@@ -35,13 +35,13 @@ def test_no_weird_extras():
     with pytest.raises(TypeError):
         len(v1)
     with pytest.raises(TypeError):
-        v1 < v2
+        v1 < v2  # noqa: B015
     with pytest.raises(TypeError):
-        v1 > v2
+        v1 > v2  # noqa: B015
     with pytest.raises(TypeError):
-        v1 <= v2
+        v1 <= v2  # noqa: B015
     with pytest.raises(TypeError):
-        v1 >= v2
+        v1 >= v2  # noqa: B015
     with pytest.raises(TypeError):
         v1 + (1, 2, 3)
     with pytest.raises(TypeError):

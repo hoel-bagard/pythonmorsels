@@ -1,4 +1,4 @@
-# [Vecotr](https://www.pythonmorsels.com/exercises/ced757b8a1bd400bb983aa8a2eb0e8fe)
+# [Vector](https://www.pythonmorsels.com/exercises/ced757b8a1bd400bb983aa8a2eb0e8fe)
 
 ### My notes
 - Use `Number` when typing/testing for any type of number, rather than float or int (`from numbers import Number`).
