@@ -1,4 +1,6 @@
 import re
+import shutil
+
 
 digit_to_glyph = {
     "0": "██████\n██  ██\n██  ██\n██  ██\n██████",
@@ -13,6 +15,8 @@ digit_to_glyph = {
     "9": "██████\n██  ██\n██████\n    ██\n █████",
     ":": "  \n██\n  \n██\n  ",
 }
+
+CLEAR = "\033[H\033[J"  # Move cursor to top corner and clear screen
 
 
 def duration(duration_str: str) -> int:
@@ -38,6 +42,18 @@ def get_number_lines(seconds: int) -> list[str]:
         digit_to_glyph[seconds[1]].split('\n'),
     ])]
     return result
+
+
+def print_full_screen(lines: list[str]) -> None:
+    term_width, term_height = shutil.get_terminal_size()
+    text_width, text_height = len(lines[0]), len(lines)
+    lines_before = (term_height-text_height) // 2
+    indentation = (term_width-text_width) // 2
+
+    print(CLEAR, end="")
+    print('\n' * lines_before, end="")
+    for line in lines:
+        print(' ' * indentation + line)
 
 
 def assert_equal(res: object, expected_res: object) -> None:
@@ -70,7 +86,8 @@ def main():
                   "   ██  ██     ██     ██     ██",
                   "   ██  ██████    ██████     ██"])
     # Bonus 1
-    print("Testing the first bonus.")
+    print("Not testing the first bonus.")
+    # print_full_screen(get_number_lines(754))
 
     # Bonus 2
     print("Testing the second bonus.")

@@ -100,7 +100,7 @@ ValueError: Invalid duration: 100xy
 
 
 #### Bonus 1
-For the first bonus, make a print_full_screen function which accepts a list of lines (strings) and prints those lines in the center of the screen. The list-of-strings returned from get_number_lines should be accepted by this function.
+For the first bonus, make a `print_full_screen` function which accepts a list of lines (strings) and prints those lines in the center of the screen. The list-of-strings returned from `get_number_lines` should be accepted by this function.
 
 This function should start by printing the ANSI escape sequences Esc-[H and Esc-[J to move the cursor to the home position and clear the screen. You can use this string to represent those two escape sequences:
 

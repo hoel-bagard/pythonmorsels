@@ -9,8 +9,8 @@ import shutil
 import re
 import sys
 from textwrap import dedent, indent
-import unittest
 from unittest.mock import patch
+
 
 import pytest
 
@@ -99,100 +99,70 @@ class TestGetNumberLines():
         assert countdown.get_number_lines(seconds) == representation
 
 
-# # To test bonus 1, comment out the next line
-# @unittest.expectedFailure
-# class PrintFullScreen(unittest.TestCase):
+@pytest.mark.bonus1
+class TestPrintFullScreen():
+    """Tests for print_full_screen."""
 
-#     """Tests for print_full_screen."""
+    maxDiff = None
 
-#     maxDiff = None
+    def fake_size(self, columns, lines):
+        def get_terminal_size(fd=None):
+            return os.terminal_size([columns, lines])
+        return get_terminal_size
 
-#     def fake_size(self, columns, lines):
-#         def get_terminal_size(fd=None):
-#             return os.terminal_size([columns, lines])
-#         return get_terminal_size
+    def assert_lines_equal(self, actual_text, expected_text):
+        actual_lines = [
+            line.rstrip()
+            for line in actual_text.rstrip().splitlines()
+        ]
+        expected_lines = [
+            line.rstrip()
+            for line in expected_text.rstrip().splitlines()
+        ]
 
-#     def assertLinesEqual(self, actual_text, expected_text):
-#         actual_lines = [
-#             line.rstrip()
-#             for line in actual_text.rstrip().splitlines()
-#         ]
-#         expected_lines = [
-#             line.rstrip()
-#             for line in expected_text.rstrip().splitlines()
-#         ]
+        assert "\n".join(actual_lines) == "\n".join(expected_lines)
 
-#         self.assertEqual("\n".join(actual_lines), "\n".join(expected_lines))
+    @pytest.mark.parametrize("nb_columns, nb_lines",
+                             [(40, 10),
+                              (80, 24)])
+    def test_hello_world(self, nb_columns: int, nb_lines: int):
+        hello_world = "hello_world"
+        with patch("os.get_terminal_size", self.fake_size(nb_columns, nb_lines)):
+            reload(shutil)
+            reload(countdown)
+            with redirect_stdout(StringIO()) as stdout:
+                countdown.print_full_screen([hello_world])
+        output = stdout.getvalue()
 
-#     def test_tiny_terminal(self):
-#         with patch("os.get_terminal_size", self.fake_size(40, 10)):
-#             reload(shutil)
-#             reload(countdown)
-#             with redirect_stdout(StringIO()) as stdout:
-#                 countdown.print_full_screen(["hello world"])
-#             output = stdout.getvalue()
-#         self.assertEqual(output[:6], "\x1b[H\x1b[J")
-#         self.assertLinesEqual(output[6:].rstrip(), """
+        text_width, text_height = len(hello_world), 1
+        lines_before = (nb_lines-text_height) // 2
+        indentation = (nb_columns-text_width) // 2
 
+        assert output[:6] == "\x1b[H\x1b[J"  # Check that the screen was cleaned
+        assert output[6:] == '\n' * lines_before + ' ' * indentation + hello_world + '\n'
 
+    @pytest.mark.parametrize("nb_columns, nb_lines",
+                             [(100, 30),
+                              (80, 24)])
+    def test_timer(self, nb_columns: int, nb_lines: int):
+        lines = ["██████ ██████       ██   ████ ",
+                 "    ██ ██     ██   ███  ██  ██",
+                 " █████ ██████       ██   ████ ",
+                 "    ██     ██ ██    ██  ██  ██",
+                 "██████ ██████       ██   ████ "]
+        with patch("os.get_terminal_size", self.fake_size(nb_columns, nb_lines)):
+            reload(shutil)
+            reload(countdown)
+            with redirect_stdout(StringIO()) as stdout:
+                countdown.print_full_screen(lines)
+        output = stdout.getvalue()
 
-#               hello world
-#         """)
+        text_width, text_height = len(lines[0]), len(lines)
+        lines_before = (nb_lines-text_height) // 2
+        indentation = (nb_columns-text_width) // 2
 
-#     def test_larger_terminal(self):
-#         with patch("os.get_terminal_size", self.fake_size(80, 24)):
-#             reload(shutil)
-#             reload(countdown)
-#             with redirect_stdout(StringIO()) as stdout:
-#                 countdown.print_full_screen(["hello world"])
-#             output = stdout.getvalue()
-#         self.assertEqual(output[:6], "\x1b[H\x1b[J")
-#         self.assertLinesEqual(output[6:].rstrip(), """
-
-
-
-
-
-
-
-
-
-
-#                                   hello world
-#         """)
-
-#     def test_more_text_to_center(self):
-#         with patch("os.get_terminal_size", self.fake_size(100, 30)):
-#             reload(shutil)
-#             reload(countdown)
-#             with redirect_stdout(StringIO()) as stdout:
-#                 countdown.print_full_screen(undent("""
-#                     ██████ ██████       ██   ████
-#                         ██ ██     ██   ███  ██  ██
-#                      █████ ██████       ██   ████
-#                         ██     ██ ██    ██  ██  ██
-#                     ██████ ██████       ██   ████
-#                 """).splitlines())
-#             output = stdout.getvalue()
-#         self.assertEqual(output[:6], "\x1b[H\x1b[J")
-#         self.assertLinesEqual(output[6:].rstrip(), """
-
-
-
-
-
-
-
-
-
-
-
-#                                    ██████ ██████       ██   ████
-#                                        ██ ██     ██   ███  ██  ██
-#                                     █████ ██████       ██   ████
-#                                        ██     ██ ██    ██  ██  ██
-#                                    ██████ ██████       ██   ████
-#         """)
+        assert output[:6] == "\x1b[H\x1b[J"  # Check that the screen was cleaned
+        assert output[6:] == '\n' * lines_before + '\n'.join(' ' * indentation + line for line in lines) + '\n'
 
 
 # # To test bonus 2, comment out the next line
@@ -483,7 +453,3 @@ class TestGetNumberLines():
 #                 return output.getvalue()
 #     finally:
 #         sys.argv = old_args
-
-
-# if __name__ == "__main__":
-#     unittest.main(verbosity=2)
