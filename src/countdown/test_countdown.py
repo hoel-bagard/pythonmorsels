@@ -9,7 +9,7 @@ from importlib.machinery import SourceFileLoader
 from importlib.util import module_from_spec, spec_from_loader
 from io import StringIO
 from textwrap import indent
-from typing import Callable, Optional
+from typing import Callable, Optional, Type
 from unittest.mock import patch
 
 import pytest
@@ -321,7 +321,7 @@ class DummyError(Exception):
     """No code will ever raise this exception."""
 
 
-def run_program(arguments: str, raises = DummyError) -> str:  # type: ignore (cannot type exception)
+def run_program(arguments: str, raises: Type[Exception] = DummyError) -> str:
     """Run python program at given path with given arguments and return the stdout and stderr contents.
 
     Args:

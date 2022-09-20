@@ -1,7 +1,7 @@
 import functools
 import traceback
 from dataclasses import dataclass
-from typing import Any, Optional
+from typing import Any, Callable, Optional
 
 
 NO_RETURN = object()
@@ -16,13 +16,13 @@ class Call:
 
 
 class record_calls:  # noqa: N801
-    def __init__(self, func):
+    def __init__(self, func: Callable[..., object]):
         functools.update_wrapper(self, func)
         self.func = func
         self.call_count = 0
         self.calls: list[Call] = []
 
-    def __call__(self, *args, **kwargs):
+    def __call__(self, *args: object, **kwargs: object):
         self.call_count += 1
         try:
             return_value = self.func(*args, **kwargs)
@@ -35,7 +35,7 @@ class record_calls:  # noqa: N801
 
 def main():
     @record_calls
-    def greet(name="world"):
+    def greet(name: str = "world"):
         """Greet someone by their name."""
         print(f"Hello {name}")
 
@@ -63,7 +63,7 @@ def main():
     print("\nBonus 3")
 
     @record_calls
-    def cube(n):
+    def cube(n: float):
         return n**3
 
     print(f"{cube(3)=}")

@@ -2,7 +2,8 @@ from typing import TypeVar
 
 T = TypeVar('T')
 D = TypeVar('D')
-NestedDict = dict[str, "NestedDict[T]" | T]
+# NestedDict = dict[str, "NestedDict[T]" | T]
+NestedDict = dict[str, dict[str, T] | T]
 
 
 def pluck(nested_dict: NestedDict[T],
@@ -28,12 +29,12 @@ def pluck(nested_dict: NestedDict[T],
     return partial_dict
 
 
-def test_equal(res, expected_res) -> None:
+def test_equal(res: object, expected_res: object) -> None:
     assert res == expected_res, f"Wrong result, got:\n\t{res}\nbut expected\n\t {expected_res}"
 
 
 def main():
-    data = {"amount": 10.64, "category": {"name": "Music", "group": "Fun"}}
+    data = {"amount": "10.64", "category": {"name": "Music", "group": "Fun"}}
 
     # Base exercise:
     test_equal(pluck(data, "amount"), 10.64)
