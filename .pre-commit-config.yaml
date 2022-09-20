@@ -1,0 +1,9 @@
+default_language_version:
+    python: python3.10
+
+repos:
+  - repo: https://github.com/RobertCraigie/pyright-python
+    rev: v1.1.271
+    hooks:
+    - id: pyright
+
