@@ -78,6 +78,7 @@ def main() -> None:
 
     # Bonus 3
     print("\nBonus 3 prints")
+
     @suppress(TypeError)
     def len_or_none(thing: Sized) -> int:
         return len(thing)

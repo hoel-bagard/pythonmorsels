@@ -1,7 +1,7 @@
 # [Pluck](https://www.pythonmorsels.com/exercises/4932f67db2734adda695d20e4441c249)
 
 ### My notes
-Standard and fairly simple exercise on dictionaries, a bit disappointed that recursion isn't the best answer. 
+Standard and fairly simple exercise on dictionaries, a bit disappointed that recursion isn't the best answer.
 
 
 ### Usage

@@ -12,5 +12,3 @@ vs
 - In Python 3.6 and above, dictionaries are ordered by default. Therefore using an `OrderedDict` is unecessary.
 - Could inherit from `from collections.abc import Set` to have all the set operations (substractions, merge, equality, etc...).
 - Or even from `from collections.abc import MutableSet` for even more "free" operations!
-
-

@@ -85,4 +85,3 @@ True
 #### Hints
 - [A class to help in creating custom strings](https://docs.python.org/3/library/collections.html#collections.UserString)
 - [Bonus 3: normalizing unicode characters](https://docs.python.org/3/library/unicodedata.html#unicodedata.normalize)
-
