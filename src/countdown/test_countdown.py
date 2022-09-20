@@ -36,6 +36,7 @@ CLEAR = "\033[H\033[J"  # Move cursor to top corner and clear screen
 
 def correct_duration(duration_str: str) -> int:
     match = re.search(r"^(?:(\d+)m)?(?:(\d+)s)?$", duration_str)
+    assert match is not None  # For pyright, no wrong timestamp will be sent to this function.
     minutes, seconds = match.groups(default=0)
     return 60 * int(minutes) + int(seconds)
 
@@ -307,12 +308,12 @@ class FakeSleep:
         self.slept = 0
         self.raises = {}
 
-    def __call__(self, seconds):
+    def __call__(self, seconds: int):
         self.slept += seconds
         if self.slept in self.raises:
             raise self.raises[self.slept]
 
-    def raise_at(self, seconds, exception):
+    def raise_at(self, seconds: int, exception: type):
         self.raises[seconds] = exception
 
 
@@ -320,7 +321,7 @@ class DummyError(Exception):
     """No code will ever raise this exception."""
 
 
-def run_program(arguments: str, raises: Exception = DummyError) -> str:
+def run_program(arguments: str, raises = DummyError) -> str:  # type: ignore (cannot type exception)
     """Run python program at given path with given arguments and return the stdout and stderr contents.
 
     Args:
@@ -341,7 +342,7 @@ def run_program(arguments: str, raises: Exception = DummyError) -> str:
                     del sys.modules["__main__"]
                 loader = SourceFileLoader("__main__", python_file_path)
                 spec = spec_from_loader(loader.name, loader)
-                module = module_from_spec(spec)
+                module = module_from_spec(spec)  # type: ignore
                 sys.modules["__main__"] = module
                 loader.exec_module(module)
             except raises:
