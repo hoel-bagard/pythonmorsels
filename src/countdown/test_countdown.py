@@ -1,20 +1,70 @@
 import os
-# import re
-# import shlex
+import re
+import shlex
 import shutil
-# import sys
-# from contextlib import redirect_stderr, redirect_stdout
-from contextlib import redirect_stdout
+import sys
+from contextlib import redirect_stderr, redirect_stdout
 from importlib import reload
-# from importlib.machinery import SourceFileLoader
-# from importlib.util import module_from_spec, spec_from_loader
+from importlib.machinery import SourceFileLoader
+from importlib.util import module_from_spec, spec_from_loader
 from io import StringIO
+from textwrap import indent
 from typing import Callable, Optional
 from unittest.mock import patch
 
 import pytest
 
 import src.countdown.countdown as countdown
+
+
+digit_to_glyph: dict[str, str] = {
+    "0": "██████\n██  ██\n██  ██\n██  ██\n██████",
+    "1": "   ██ \n  ███ \n   ██ \n   ██ \n   ██ ",
+    "2": "██████\n    ██\n██████\n██    \n██████",
+    "3": "██████\n    ██\n █████\n    ██\n██████",
+    "4": "██  ██\n██  ██\n██████\n    ██\n    ██",
+    "5": "██████\n██    \n██████\n    ██\n██████",
+    "6": "██████\n██    \n██████\n██  ██\n██████",
+    "7": "██████\n    ██\n   ██ \n  ██  \n  ██  ",
+    "8": " ████ \n██  ██\n ████ \n██  ██\n ████ ",
+    "9": "██████\n██  ██\n██████\n    ██\n █████",
+    ":": "  \n██\n  \n██\n  ",
+}
+
+CLEAR = "\033[H\033[J"  # Move cursor to top corner and clear screen
+
+
+def correct_duration(duration_str: str) -> int:
+    match = re.search(r"^(?:(\d+)m)?(?:(\d+)s)?$", duration_str)
+    minutes, seconds = match.groups(default=0)
+    return 60 * int(minutes) + int(seconds)
+
+
+def correct_get_number_lines(seconds: int) -> list[str]:
+    timestamp = f"{seconds//60:02d}:{seconds%60:02d}"
+    return [" ".join(line_parts) for line_parts in zip(*[digit_to_glyph[char].splitlines() for char in timestamp])]
+
+
+def correct_print_full_screen(lines: list[str]) -> str:
+    term_width, term_height = shutil.get_terminal_size()
+    text_width, text_height = len(lines[0]), len(lines)
+    lines_before = (term_height-text_height) // 2
+    indentation = (term_width-text_width) // 2
+
+    vertical_pad = lines_before * "\n"
+    indented_lines = indent("\n".join(lines), indentation * " ")
+
+    return CLEAR + vertical_pad + indented_lines
+
+
+def correct_main(countdown: str) -> str:
+    seconds = correct_duration(countdown)
+
+    result_str = "\x1b[?25l"
+    for remaining_time in range(seconds, -1, -1):
+        result_str += correct_print_full_screen(correct_get_number_lines(remaining_time))
+    result_str += "\x1b[?25h"
+    return result_str
 
 
 class TestDuration:
@@ -103,11 +153,6 @@ class TestGetNumberLines:
 class TestPrintFullScreen:
     """Tests for print_full_screen."""
 
-    def fake_size(self, columns: int, lines: int) -> Callable[[], tuple[int, int]]:
-        def get_terminal_size(fd: Optional[str] = None):
-            return os.terminal_size([columns, lines])
-        return get_terminal_size
-
     def assert_lines_equal(self, actual_text: str, expected_text: str):
         actual_lines: list[str] = [
             line.rstrip()
@@ -125,7 +170,7 @@ class TestPrintFullScreen:
                               (80, 24)])
     def test_hello_world(self, nb_columns: int, nb_lines: int):
         hello_world = "hello_world"
-        with patch("os.get_terminal_size", self.fake_size(nb_columns, nb_lines)):
+        with patch("os.get_terminal_size", fake_size(nb_columns, nb_lines)):
             reload(shutil)
             reload(countdown)
             with redirect_stdout(StringIO()) as stdout:
@@ -148,7 +193,7 @@ class TestPrintFullScreen:
                  " █████ ██████       ██   ████ ",
                  "    ██     ██ ██    ██  ██  ██",
                  "██████ ██████       ██   ████ "]
-        with patch("os.get_terminal_size", self.fake_size(nb_columns, nb_lines)):
+        with patch("os.get_terminal_size", fake_size(nb_columns, nb_lines)):
             reload(shutil)
             reload(countdown)
             with redirect_stdout(StringIO()) as stdout:
@@ -164,40 +209,18 @@ class TestPrintFullScreen:
 
 
 # @pytest.mark.bonus2
-# class CountdownModuleTests:
+# class TestCountdownModuleB2:
 #     """Tests for countdown.py."""
 
-#     def assertOutput(self, actual_text, expected_text, allow_wiggle=True):
-#         expected_text = expected_text.rstrip()
-#         actual_text = re.sub(r"^[\s\S]*?\033\[H\033\[J", r"", actual_text)
-#         actual_text = re.sub(r"\033\[([HJ]|\?25[lh])", r"", actual_text)
-#         actual_text = "\n".join([
-#             line.rstrip(" ")
-#             for line in actual_text.splitlines()
-#         ]).rstrip()
-#         try:
-#             self.assertEqual(actual_text, expected_text)
-#         except AssertionError as e:
-#             if not allow_wiggle:
-#                 raise
-#             try:
-#                 new1 = "\n".join(line[1:] for line in actual_text.split("\n"))
-#                 self.assertOutput(new1, expected_text, allow_wiggle=False)
-#             except AssertionError:
-#                 try:
-#                     new2 = indent(actual_text, " ")
-#                     self.assertOutput(new2, expected_text, allow_wiggle=False)
-#                 except AssertionError:
-#                     raise e from None
-
 #     def test_3_seconds(self):
-#         with patch("os.get_terminal_size", self.fake_size(60, 20)):
+#         with patch("os.get_terminal_size", fake_size(60, 20)):
 #             with patch("time.sleep", FakeSleep()) as sleep_patch:
 #                 reload(shutil)
 #                 reload(countdown)
-#                 self.assertOutput(run_program("countdown.py 3s"), """
-#                 """)
-#         self.assertEqual(sleep_patch.slept, 4, "3 seconds = 4 sleeps")
+#                 correct_str = correct_main("3s")
+#                 correct_str.replace("\x1b[?25l", '')
+#                 assert correct_str == run_program("src/countdown/countdown.py 3s")
+#         assert sleep_patch.slept == 4
 
 #     def test_1_minute(self):
 #         with patch("os.get_terminal_size", self.fake_size(32, 8)):
@@ -206,73 +229,7 @@ class TestPrintFullScreen:
 #                 reload(countdown)
 #                 # Raise exception after 11 seconds
 #                 sleep_patch.raise_at(11, SystemExit(0))
-#                 self.assertOutput(run_program("countdown.py 1m"), """
-# ██████    ██     ██████ ██████
-# ██  ██   ███  ██ ██  ██ ██  ██
-# ██  ██    ██     ██  ██ ██  ██
-# ██  ██    ██  ██ ██  ██ ██  ██
-# ██████    ██     ██████ ██████
-
-# ██████ ██████    ██████ ██████
-# ██  ██ ██  ██ ██ ██     ██  ██
-# ██  ██ ██  ██    ██████ ██████
-# ██  ██ ██  ██ ██     ██     ██
-# ██████ ██████    ██████  █████
-
-# ██████ ██████    ██████  ████
-# ██  ██ ██  ██ ██ ██     ██  ██
-# ██  ██ ██  ██    ██████  ████
-# ██  ██ ██  ██ ██     ██ ██  ██
-# ██████ ██████    ██████  ████
-
-# ██████ ██████    ██████ ██████
-# ██  ██ ██  ██ ██ ██         ██
-# ██  ██ ██  ██    ██████    ██
-# ██  ██ ██  ██ ██     ██   ██
-# ██████ ██████    ██████   ██
-
-# ██████ ██████    ██████ ██████
-# ██  ██ ██  ██ ██ ██     ██
-# ██  ██ ██  ██    ██████ ██████
-# ██  ██ ██  ██ ██     ██ ██  ██
-# ██████ ██████    ██████ ██████
-
-# ██████ ██████    ██████ ██████
-# ██  ██ ██  ██ ██ ██     ██
-# ██  ██ ██  ██    ██████ ██████
-# ██  ██ ██  ██ ██     ██     ██
-# ██████ ██████    ██████ ██████
-
-# ██████ ██████    ██████ ██  ██
-# ██  ██ ██  ██ ██ ██     ██  ██
-# ██  ██ ██  ██    ██████ ██████
-# ██  ██ ██  ██ ██     ██     ██
-# ██████ ██████    ██████     ██
-
-# ██████ ██████    ██████ ██████
-# ██  ██ ██  ██ ██ ██         ██
-# ██  ██ ██  ██    ██████  █████
-# ██  ██ ██  ██ ██     ██     ██
-# ██████ ██████    ██████ ██████
-
-# ██████ ██████    ██████ ██████
-# ██  ██ ██  ██ ██ ██         ██
-# ██  ██ ██  ██    ██████ ██████
-# ██  ██ ██  ██ ██     ██ ██
-# ██████ ██████    ██████ ██████
-
-# ██████ ██████    ██████    ██
-# ██  ██ ██  ██ ██ ██       ███
-# ██  ██ ██  ██    ██████    ██
-# ██  ██ ██  ██ ██     ██    ██
-# ██████ ██████    ██████    ██
-
-# ██████ ██████    ██████ ██████
-# ██  ██ ██  ██ ██ ██     ██  ██
-# ██  ██ ██  ██    ██████ ██  ██
-# ██  ██ ██  ██ ██     ██ ██  ██
-# ██████ ██████    ██████ ██████
-#                 """)
+#                 self.assertOutput(run_program("countdown.py 1m"), """""")
 
 #     def test_10_minutes_has_over_600_clear_screens(self):
 #         with patch("os.get_terminal_size", self.fake_size(32, 10)):
@@ -337,61 +294,69 @@ class TestPrintFullScreen:
 #                 self.assertIn(b"\033[?25h", output[-6:], "Show cursor last")
 
 
-# def undent(text):
-#     return dedent(text.lstrip("\n")).strip("\n")
+def fake_size(columns: int, lines: int) -> Callable[[], tuple[int, int]]:
+    def get_terminal_size(fd: Optional[str] = None):
+        return os.terminal_size([columns, lines])
+    return get_terminal_size
 
 
-# class FakeSleep:
+class FakeSleep:
+    """Fake time.sleep."""
 
-#     """Fake time.sleep."""
+    def __init__(self):
+        self.slept = 0
+        self.raises = {}
 
-#     def __init__(self):
-#         self.slept = 0
-#         self.raises = {}
+    def __call__(self, seconds):
+        self.slept += seconds
+        if self.slept in self.raises:
+            raise self.raises[self.slept]
 
-#     def __call__(self, seconds):
-#         self.slept += seconds
-#         if self.slept in self.raises:
-#             raise self.raises[self.slept]
-
-#     def raise_at(self, seconds, exception):
-#         self.raises[seconds] = exception
+    def raise_at(self, seconds, exception):
+        self.raises[seconds] = exception
 
 
-# def run_program(arguments="", raises=DummyException):
-#     """
-#     Run program at given path with given arguments.
+class DummyError(Exception):
+    """No code will ever raise this exception."""
 
-#     If raises is specified, ensure the given exception is raised.
-#     """
-#     arguments = arguments.replace('\\', '\\\\')
-#     path, *args = shlex.split(arguments)
-#     old_args = sys.argv
-#     assert all(isinstance(a, str) for a in args)
-#     try:
-#         sys.argv = [path] + args
-#         with redirect_stdout(StringIO()) as output:
-#             with redirect_stderr(output):
-#                 try:
-#                     if '__main__' in sys.modules:
-#                         del sys.modules['__main__']
-#                     loader = SourceFileLoader('__main__', path)
-#                     spec = spec_from_loader(loader.name, loader)
-#                     module = module_from_spec(spec)
-#                     sys.modules['__main__'] = module
-#                     loader.exec_module(module)
-#                 except raises:
-#                     return output.getvalue()
-#                 except KeyboardInterrupt:
-#                     return output.getvalue()
-#                 except SystemExit as e:
-#                     if e.args != (0,):
-#                         raise SystemExit(output.getvalue()) from e
-#                 finally:
-#                     sys.modules['__main__'].__dict__.clear()
-#                     sys.modules.pop('__main__', None)  # Closes any open files
-#                 if raises is not DummyException:
-#                     raise AssertionError("{} not raised".format(raises))
-#                 return output.getvalue()
-#     finally:
-#         sys.argv = old_args
+
+def run_program(arguments: str, raises: Exception = DummyError) -> str:
+    """Run python program at given path with given arguments and return the stdout and stderr contents.
+
+    Args:
+        arguments: A string with the python file to run and the arguments to give to it.
+        raises: If specified, ensure the given exception is raised.
+    """
+    old_args = sys.argv
+    python_file_path, *args = shlex.split(arguments)
+    assert all(isinstance(arg, str) for arg in args)
+    try:
+        sys.argv = [python_file_path] + args
+        with redirect_stdout(StringIO()) as output, \
+             redirect_stderr(output):
+            try:
+                # Replace the main module.
+                # (remove this file as the main module, and set the script from the arguments as main).
+                if "__main__" in sys.modules:
+                    del sys.modules["__main__"]
+                loader = SourceFileLoader("__main__", python_file_path)
+                spec = spec_from_loader(loader.name, loader)
+                module = module_from_spec(spec)
+                sys.modules["__main__"] = module
+                loader.exec_module(module)
+            except raises:
+                return output.getvalue()
+            except KeyboardInterrupt:
+                return output.getvalue()
+            except SystemExit as e:
+                if e.args != (0,):
+                    raise SystemExit(output.getvalue()) from e
+            finally:
+                sys.modules["__main__"].__dict__.clear()
+                sys.modules.pop("__main__", None)  # Closes any open file.
+            if raises is not DummyError:
+                raise AssertionError(f"{raises} not raised")
+            return output.getvalue()
+    finally:
+        sys.argv = old_args
+        # Could also reload this module as __main__, no ?
