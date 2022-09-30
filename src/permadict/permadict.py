@@ -1,30 +1,33 @@
 from __future__ import annotations
 
 from collections import UserDict
-from typing import Any, Iterable
+from typing import Iterable
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from _typeshed import SupportsKeysAndGetItem
 
 
-class PermaDict(UserDict):
-    def __init__(self, *args, silent: bool = False, **kwargs):
-        super().__init__(*args, **kwargs)
+class PermaDict(UserDict[str, str]):
+    def __init__(self,
+                 *args: Iterable[tuple[str, str]] | SupportsKeysAndGetItem[str, str],
+                 silent: bool = False,
+                 **kwargs: dict[str, str]):
+        super().__init__(*args, **kwargs)  # type: ignore
         self.silent = silent
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: str, value: str):
         if key not in self.keys():
             super().__setitem__(key, value)
         elif not self.silent:
             raise KeyError(f"'{key}' already in dictionary")
 
-    def force_set(self, key, value):
+    def force_set(self, key: str, value: str):
         super().__setitem__(key, value)
 
     def update(self,
-               *args: Iterable[tuple[Any, Any]] | SupportsKeysAndGetItem[Any, Any],
+               *args: Iterable[tuple[str, str]] | SupportsKeysAndGetItem[str, str],
                force: bool = False,
-               **kwargs: Any) -> None:
+               **kwargs: dict[str, str]) -> None:
         if force:
             return self.data.update(*args, **kwargs)
         else:
@@ -56,7 +59,7 @@ def main():
     try:
         locations["David"] = "Amsterdam"
         raise Exception("Should have raised a KeyError but did not.")
-    except KeyError as e:  # noqa
+    except KeyError:  # noqa
         pass
 
     # Bonus 1
