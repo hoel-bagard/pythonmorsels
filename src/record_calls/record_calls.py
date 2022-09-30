@@ -1,36 +1,56 @@
 import functools
 import traceback
 from dataclasses import dataclass
-from typing import Any, Callable, Optional
+from typing import Any, Callable, Optional, ParamSpec, TypeVar
 
+_P = ParamSpec("_P")
+_R = TypeVar("_R")
 
 NO_RETURN = object()
 
 
 @dataclass
 class Call:
-    args: Any
-    kwargs: Any
+    args: tuple[Any, ...]
+    kwargs: dict[str, Any]
     return_value: Any = NO_RETURN
-    exception: Optional[Exception] = None
+    exception: Optional[BaseException] = None
 
 
-class record_calls:  # noqa: N801
-    def __init__(self, func: Callable[..., object]):
-        functools.update_wrapper(self, func)
-        self.func = func
-        self.call_count = 0
-        self.calls: list[Call] = []
+# class record_calls:  # noqa: N801
+#     def __init__(self, func: Callable[..., Any]):
+#         functools.update_wrapper(self, func)
+#         self.func = func
+#         self.call_count = 0
+#         self.calls: list[Call] = []
 
-    def __call__(self, *args: object, **kwargs: object):
-        self.call_count += 1
+#     def __call__(self, *args: Any, **kwargs: dict[str, Any]):
+#         self.call_count += 1
+#         try:
+#             return_value = self.func(*args, **kwargs)
+#             self.calls.append(Call(args, kwargs, return_value, None))
+#             return return_value
+#         except Exception as e:
+#             self.calls.append(Call(args, kwargs, NO_RETURN, e))
+#             raise
+
+
+def record_calls(func: Callable[_P, _R]) -> Callable[_P, _R]:
+    """Record calls to the given function."""
+    @functools.wraps(func)
+    def wrapper(*args: _P.args, **kwargs: _P.kwargs):
+        wrapper.call_count += 1
+        call = Call(args, kwargs)
+        wrapper.calls.append(call)
         try:
-            return_value = self.func(*args, **kwargs)
-            self.calls.append(Call(args, kwargs, return_value, None))
-            return return_value
-        except Exception as e:
-            self.calls.append(Call(args, kwargs, NO_RETURN, e))
+            call.return_value = func(*args, **kwargs)
+        except BaseException as e:
+            call.exception = e
             raise
+        return call.return_value
+    wrapper.call_count = 0
+    wrapper.calls = []
+    return wrapper
 
 
 def main():
@@ -69,7 +89,7 @@ def main():
     print(f"{cube(3)=}")
     print(cube.calls)
     try:
-        cube(None)
+        cube(None)  # type: ignore
     except Exception:
         print(traceback.format_exc())
     print(cube.calls[-1].exception)
