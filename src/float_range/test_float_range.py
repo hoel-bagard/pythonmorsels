@@ -1,3 +1,4 @@
+# type: ignore
 import sys
 import unittest
 from collections.abc import Generator

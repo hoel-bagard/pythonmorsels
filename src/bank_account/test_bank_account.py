@@ -1,3 +1,4 @@
+# type: ignore
 import unittest
 
 from bank_account import BankAccount

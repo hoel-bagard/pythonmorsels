@@ -1,3 +1,4 @@
+# type: ignore
 import atexit
 import multiprocessing
 import sys
