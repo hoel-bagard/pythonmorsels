@@ -13,13 +13,13 @@ class FancyReaderTests(unittest.TestCase):
     def test_with_files(self):
         reader = FancyReader(
             StringIO("1,2,3\r\n4,5,6\r\n"),
-            fieldnames=['a', 'b', 'c'],
+            fieldnames=["a", "b", "c"],
         )
         self.assertEqual(len(list(reader)), 2)
 
     def test_with_list(self):
         text = "1,2,3\n4,5,6"
-        reader = FancyReader(text.splitlines(), fieldnames=['a', 'b', 'c'])
+        reader = FancyReader(text.splitlines(), fieldnames=["a", "b", "c"])
         self.assertEqual(len(list(reader)), 2)
 
     def test_many_columns_and_rows(self):
@@ -32,7 +32,7 @@ class FancyReaderTests(unittest.TestCase):
         """).lstrip()
         reader = FancyReader(
             text.splitlines(),
-            fieldnames=['first', 'last', 'color', 'saying'],
+            fieldnames=["first", "last", "color", "saying"],
         )
         rows = list(reader)
         self.assertEqual(len(rows), 5)
@@ -46,18 +46,18 @@ class FancyReaderTests(unittest.TestCase):
 
     def test_accessing_attributes_from_rows(self):
         text = "1,2,3\n4,5,6"
-        reader = FancyReader(text.splitlines(), fieldnames=['a', 'b', 'c'])
+        reader = FancyReader(text.splitlines(), fieldnames=["a", "b", "c"])
         row1, row2 = reader
-        self.assertEqual(row1.a, '1')
-        self.assertEqual(row1.b, '2')
-        self.assertEqual(row1.c, '3')
-        self.assertEqual(row2.a, '4')
-        self.assertEqual(row2.b, '5')
-        self.assertEqual(row2.c, '6')
+        self.assertEqual(row1.a, "1")
+        self.assertEqual(row1.b, "2")
+        self.assertEqual(row1.c, "3")
+        self.assertEqual(row2.a, "4")
+        self.assertEqual(row2.b, "5")
+        self.assertEqual(row2.c, "6")
 
     def test_lazy_looping(self):
         my_file = StringIO("1,2,3\r\n4,5,6\r\n")
-        reader = FancyReader((x for x in my_file), fieldnames=['a', 'b', 'c'])
+        reader = FancyReader((x for x in my_file), fieldnames=["a", "b", "c"])
         self.assertEqual(my_file.tell(), 0)
         next(reader)
         self.assertEqual(list(my_file), ["4,5,6\r\n"])
@@ -66,11 +66,11 @@ class FancyReaderTests(unittest.TestCase):
     # @unittest.expectedFailure
     def test_row_iterability_and_string_representation(self):
         text = "1,2,3\n4,5,6"
-        reader = FancyReader(text.splitlines(), fieldnames=['a', 'b', 'c'])
+        reader = FancyReader(text.splitlines(), fieldnames=["a", "b", "c"])
         rows = list(reader)
         print(rows[0])
-        self.assertEqual(tuple(rows[0]), ('1', '2', '3'))
-        self.assertEqual(tuple(rows[1]), ('4', '5', '6'))
+        self.assertEqual(tuple(rows[0]), ("1", "2", "3"))
+        self.assertEqual(tuple(rows[1]), ("4", "5", "6"))
         self.assertEqual(repr(rows[0]), "Row(a='1', b='2', c='3')")
 
     # To test bonus 2, comment out the next line
@@ -80,12 +80,12 @@ class FancyReaderTests(unittest.TestCase):
         my_file = StringIO("a,b,c\r\n1,2,3\r\n4,5,6\r\n")
         reader = FancyReader(my_file)
         rows = list(reader)
-        self.assertEqual(rows[0].a, '1')
-        self.assertEqual(rows[0].b, '2')
-        self.assertEqual(rows[0].c, '3')
-        self.assertEqual(rows[1].a, '4')
-        self.assertEqual(rows[1].b, '5')
-        self.assertEqual(rows[1].c, '6')
+        self.assertEqual(rows[0].a, "1")
+        self.assertEqual(rows[0].b, "2")
+        self.assertEqual(rows[0].c, "3")
+        self.assertEqual(rows[1].a, "4")
+        self.assertEqual(rows[1].b, "5")
+        self.assertEqual(rows[1].c, "6")
 
     # To test bonus 3, comment out the next line
     # @unittest.expectedFailure
@@ -94,7 +94,7 @@ class FancyReaderTests(unittest.TestCase):
         # Reader with fieldnames
         reader = FancyReader(
             text.splitlines(),
-            fieldnames=['a', 'b', 'c'],
+            fieldnames=["a", "b", "c"],
         )
         self.assertEqual(reader.line_num, 0)
         next(reader)

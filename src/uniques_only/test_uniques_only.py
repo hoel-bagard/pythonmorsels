@@ -8,12 +8,12 @@ import pytest
 from src.uniques_only.uniques_only import uniques_only
 
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 @pytest.mark.parametrize("input_iter, expected_res", [
     ([1, 2, 3], [1, 2, 3]),
-    (['1', "23"], ['1', "23"]),
+    (["1", "23"], ["1", "23"]),
 ])
 def test_no_duplicates(input_iter: Iterable[T], expected_res: list[T]):
     assert list(uniques_only(input_iter)) == expected_res
@@ -21,7 +21,7 @@ def test_no_duplicates(input_iter: Iterable[T], expected_res: list[T]):
 
 @pytest.mark.parametrize("input_iter, expected_res", [
     ([1, 1, 2, 2, 3], [1, 2, 3]),
-    (['1', '1', "23", "23"], ['1', "23"]),
+    (["1", "1", "23", "23"], ["1", "23"]),
 ])
 def test_adjacent_duplicates(input_iter: Iterable[T], expected_res: list[T]):
     assert list(uniques_only(input_iter)) == expected_res
@@ -29,7 +29,7 @@ def test_adjacent_duplicates(input_iter: Iterable[T], expected_res: list[T]):
 
 @pytest.mark.parametrize("input_iter, expected_res", [
     ([1, 2, 3, 1, 2], [1, 2, 3]),
-    (['1', "23", '1', "23"], ['1', "23"]),
+    (["1", "23", "1", "23"], ["1", "23"]),
 ])
 def test_non_adjacent_duplicates(input_iter: Iterable[T], expected_res: list[T]):
     assert list(uniques_only(input_iter)) == expected_res
@@ -37,7 +37,7 @@ def test_non_adjacent_duplicates(input_iter: Iterable[T], expected_res: list[T])
 
 @pytest.mark.parametrize("input_iter, expected_res", [
     ([1, 1, 2, 2, 1, 2], [1, 2]),
-    (['1', "23", '1', '1', "23"], ['1', "23"]),
+    (["1", "23", "1", "1", "23"], ["1", "23"]),
 ])
 def test_lots_of_duplicates(input_iter: Iterable[T], expected_res: list[T]):
     assert list(uniques_only(input_iter)) == expected_res
@@ -45,7 +45,7 @@ def test_lots_of_duplicates(input_iter: Iterable[T], expected_res: list[T]):
 
 @pytest.mark.parametrize("input_iter, expected_res", [
     ([4, 8, 3, 7, 2, 8, 4, 2, 1, 9, 3, 5], [4, 8, 3, 7, 2, 1, 9, 5]),
-    (['2', '1', "23", "23"], ['2', '1', "23"]),
+    (["2", "1", "23", "23"], ["2", "1", "23"]),
 ])
 def test_order_maintained(input_iter: Iterable[T], expected_res: list[T]):
     assert list(uniques_only(input_iter)) == expected_res

@@ -85,13 +85,13 @@ class TestBonus2:
 @pytest.mark.bonus3
 class TestBonus3:
     @pytest.mark.parametrize("tag1, tag2, is_equal", [
-        ('<input type="text">', '<input type=text>', True),
-        ('<img type="text">', '<Img type=hidden>', False),
-        ('''<input type=text placeholder='Hi there' value="Hi friend">''',
-         '<input type=text value="Hi friend" placeholder="Hi there">',
+        ("<input type='text'>", "<input type=text>", True),
+        ("<img type='text'>", "<Img type=hidden>", False),
+        ("""<input type=text placeholder='Hi there' value="Hi friend">""",
+         "<input type=text value='Hi friend' placeholder='Hi there'>",
          True),
-        ('<input type=text value="Hi there" placeholder="Hi friend">',
-         '<input type=text value="Hi friend" placeholder="Hi there">',
+        ("<input type=text value='Hi there' placeholder='Hi friend'>",
+         "<input type=text value='Hi friend' placeholder='Hi there'>",
          False)
     ])
     def test_quotes(self, tag1: str, tag2: str, is_equal: bool):

@@ -4,7 +4,7 @@ from shlex import split
 def create_dict(attrs: list[str]) -> dict[str, str | None]:
     attrs_dict: dict[str, str | None] = {}
     for attr in attrs:
-        key, *value = attr.split('=')
+        key, *value = attr.split("=")
         if key not in attrs_dict.keys():  # For Bonus 1
             if len(value) == 1:
                 attrs_dict[key] = value[0]

@@ -49,7 +49,7 @@ def test_no_weird_extras():
     with pytest.raises(TypeError):
         v1 - (1, 2, 3)  # type: ignore
     with pytest.raises(TypeError):
-        v1 * 'a'  # type: ignore
+        v1 * "a"  # type: ignore
     with pytest.raises(TypeError):
         v1 / v2  # type: ignore
 

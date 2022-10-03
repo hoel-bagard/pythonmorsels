@@ -55,20 +55,20 @@ def main():
     test_equal(reader[0].w3, "fake,file")
 
     # Bonus 1
-    lines = ['my,fake,file', 'has,two,rows']
-    reader = FancyReader(lines, fieldnames=['w1', 'w2', 'w3'])
+    lines = ["my,fake,file", "has,two,rows"]
+    reader = FancyReader(lines, fieldnames=["w1", "w2", "w3"])
     row = next(reader)
     test_equal(repr(row), "Row(w1='my', w2='fake', w3='file')")
 
     # Bonus 2
-    lines = ['w1,w2,w3', 'my,fake,file', 'has,two,rows']
+    lines = ["w1,w2,w3", "my,fake,file", "has,two,rows"]
     reader = FancyReader(lines)
     row = next(reader)
     test_equal(repr(row), "Row(w1='my', w2='fake', w3='file')")
 
     # Bonus 3
-    lines = 'red,1\nblue,2\ngreen,3'.splitlines()
-    reader = FancyReader(lines, fieldnames=['color', 'number'])
+    lines = "red,1\nblue,2\ngreen,3".splitlines()
+    reader = FancyReader(lines, fieldnames=["color", "number"])
     next(reader)
     test_equal(reader.line_num, 1)
     next(reader)

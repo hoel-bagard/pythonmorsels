@@ -76,7 +76,7 @@ class TestBonus2:
             return args, kwargs
         args, kwargs = wait(1, a=3)  # type: ignore
         assert args == (1,)
-        assert kwargs == {'a': 3}
+        assert kwargs == {"a": 3}
         assert pytest.approx(wait.elapsed, abs=1e-3) == 0.01
         assert wait.runs == [wait.elapsed]
 

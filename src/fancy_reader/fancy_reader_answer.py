@@ -23,4 +23,4 @@ class FancyReader:
 
     @cached_property
     def make_row(self):
-        return namedtuple('Row', self.fieldnames)
+        return namedtuple("Row", self.fieldnames)

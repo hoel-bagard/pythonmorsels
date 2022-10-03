@@ -2,7 +2,7 @@ from collections.abc import Iterable, Iterator
 from typing import Optional, TypeVar
 
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 def with_previous(iterable: Iterable[T], *, fillvalue: Optional[T] = None) -> Iterator[tuple[T, T | None]]:
@@ -19,7 +19,7 @@ def assert_equal(res: list[tuple[T, Optional[T]]], expected_res: list[tuple[T, O
 def main():
     # Base exercise:
     print("Testing the base exercise")
-    assert_equal(list(with_previous("hello")), [('h', None), ('e', 'h'), ('l', 'e'), ('l', 'l'), ('o', 'l')])
+    assert_equal(list(with_previous("hello")), [("h", None), ("e", "h"), ("l", "e"), ("l", "l"), ("o", "l")])
     assert_equal(list(with_previous([1, 2, 3])), [(1, None), (2, 1), (3, 2)])
 
     # Bonus 1

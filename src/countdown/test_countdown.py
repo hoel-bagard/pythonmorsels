@@ -183,7 +183,7 @@ class TestPrintFullScreen:
         indentation = (nb_columns-text_width) // 2
 
         assert output[:6] == "\x1b[H\x1b[J"  # Check that the screen was cleaned
-        assert output[6:] == '\n' * lines_before + ' ' * indentation + hello_world + '\n'
+        assert output[6:] == "\n" * lines_before + " " * indentation + hello_world + "\n"
 
     @pytest.mark.parametrize("nb_columns, nb_lines",
                              [(100, 30),
@@ -206,7 +206,7 @@ class TestPrintFullScreen:
         indentation = (nb_columns-text_width) // 2
 
         assert output[:6] == "\x1b[H\x1b[J"  # Check that the screen was cleaned
-        assert output[6:] == '\n' * lines_before + '\n'.join(' ' * indentation + line for line in lines) + '\n'
+        assert output[6:] == "\n" * lines_before + "\n".join(" " * indentation + line for line in lines) + "\n"
 
 
 # @pytest.mark.bonus2

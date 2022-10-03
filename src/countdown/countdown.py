@@ -44,9 +44,9 @@ def print_full_screen(lines: list[str]) -> None:
     indentation = (term_width-text_width) // 2
 
     print(CLEAR, end="")
-    print('\n' * lines_before, end="")
+    print("\n" * lines_before, end="")
     for line in lines:
-        print(' ' * indentation + line)
+        print(" " * indentation + line)
 
 
 def assert_equal(res: object, expected_res: object) -> None:
@@ -56,13 +56,13 @@ def assert_equal(res: object, expected_res: object) -> None:
 def main_morsels(countdown: str) -> None:
     seconds = duration(countdown)
 
-    print("\x1b[?25l", end='')  # Hide cursor
+    print("\x1b[?25l", end="")  # Hide cursor
     try:
         for remaining_time in range(seconds, -1, -1):
             print_full_screen(get_number_lines(remaining_time))
             time.sleep(1)
     finally:
-        print("\x1b[?25h", end='')  # Show cursor
+        print("\x1b[?25h", end="")  # Show cursor
 
 
 def main_test():

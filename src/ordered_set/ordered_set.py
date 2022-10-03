@@ -56,7 +56,7 @@ if __name__ == "__main__":
     words = OrderedSet(["hello", "hello", "how", "are", "you"])
     words.add("doing")
     assert words == OrderedSet(["hello", "how", "are", "you", "doing"]), f"Missing new element: {words}"
-    words.discard('are')
+    words.discard("are")
     assert words == OrderedSet(["hello", "how", "you", "doing"]), f"Element not deleted: {words}"
 
     print("Passed the tests")

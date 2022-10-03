@@ -27,12 +27,12 @@ class BankAccountTests(unittest.TestCase):
 
     def test_repr(self):
         account = BankAccount()
-        self.assertIn('BankAccount(', repr(account))
-        self.assertIn('balance=0', repr(account))
-        self.assertNotIn('balance=200', repr(account))
+        self.assertIn("BankAccount(", repr(account))
+        self.assertIn("balance=0", repr(account))
+        self.assertNotIn("balance=200", repr(account))
         account.deposit(200)
-        self.assertIn('balance=200', repr(account))
-        self.assertNotIn('balance=0', repr(account))
+        self.assertIn("balance=200", repr(account))
+        self.assertNotIn("balance=0", repr(account))
 
     def test_transfer(self):
         mary_account = BankAccount(balance=100)
