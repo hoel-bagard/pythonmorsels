@@ -1,18 +1,20 @@
+from collections.abc import Iterator
 from typing import Iterable, TypeVar
 
 
-T = TypeVar("T")
+T = TypeVar("T", str, int)
+NestedIterable = Iterable[T | "NestedIterable[T]"]
 
 
-def deep_flatten(my_input: Iterable[Iterable[T]]) -> Iterable[T]:
+def deep_flatten(my_input: NestedIterable[T]) -> Iterator[T]:
     for item in my_input:
         if isinstance(item, Iterable) and not isinstance(item, str):
             yield from deep_flatten(item)
         else:
-            yield item
+            yield item  # type: ignore
 
 
-def deep_flatten_list(iterable: Iterable[Iterable[T]]) -> list[T]:
+def deep_flatten_list(iterable: NestedIterable[T]) -> list[T]:
     return list(deep_flatten(iterable))
 
 
