@@ -1,12 +1,9 @@
-from typing import ClassVar, TypeVar
-
-
-TBankAccount = TypeVar("TBankAccount", bound="BankAccount")
+from typing import ClassVar
 
 
 class BankAccount:
     next_id: ClassVar[int] = 1000
-    accounts: ClassVar[list] = []
+    accounts: ClassVar[list["BankAccount"]] = []
 
     def __init__(self, balance: float = 0):
         if balance < 0:
@@ -32,7 +29,7 @@ class BankAccount:
             raise ValueError(f"Can't withdraw {amount} with {self.balance} balance")
         self._balance -= amount
 
-    def transfer(self, other: TBankAccount, amount: float):
+    def transfer(self, other: "BankAccount", amount: float):
         self.withdraw(amount)
         other.deposit(amount)
 
@@ -40,7 +37,7 @@ class BankAccount:
         return f"{type(self).__name__}(balance={self.balance})"
 
 
-def test_equal(res, expected_res):
+def test_equal(res: object, expected_res: object):
     assert res == expected_res, f"Wrong result, got:\n\t{res}\nbut expected\n\t {expected_res}"
 
 
@@ -103,7 +100,7 @@ def main():
     account1 = BankAccount(100)
     test_equal(account1.balance, 100)
     try:
-        account1.balance = 500
+        account1.balance = 500  # type: ignore
         raise Exception("Should have raised an AttributeError but did not.")
     except AttributeError:
         pass
