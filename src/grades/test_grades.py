@@ -1,6 +1,6 @@
 import unittest
 
-from grades import percent_to_grade
+from src.grades.grades import percent_to_grade
 
 
 class PercentToGradeTests(unittest.TestCase):
@@ -65,7 +65,7 @@ class PercentToGradeTests(unittest.TestCase):
         self.assertEqual(percent_to_grade(59, suffix=True), "F")
         self.assertEqual(percent_to_grade(0, suffix=True), "F")
         with self.assertRaises(Exception):  # noqa
-            percent_to_grade(0, True)  # suffix is a keyword-only argument
+            percent_to_grade(0, True)  # pyright: ignore  # suffix is a keyword-only argument
 
     # To test bonus 2, comment out the next line
     # @unittest.expectedFailure
@@ -86,12 +86,12 @@ class CalculateGPATests(unittest.TestCase):
     """Tests for calculate_gpa."""
 
     def test_variety_of_grades(self):
-        from grades import calculate_gpa
+        from src.grades.grades import calculate_gpa
         self.assertEqual(calculate_gpa(["A", "B", "C", "D", "F"]), 2)
         self.assertEqual(calculate_gpa(["A", "B", "C", "D"]), 2.5)
 
     def test_with_suffixes(self):
-        from grades import calculate_gpa
+        from src.grades.grades import calculate_gpa
         self.assertEqual(calculate_gpa(["A-", "B+", "C-", "D+", "F"]), 2)
         self.assertAlmostEqual(
             calculate_gpa(["A-", "B+", "C", "D+", "F"]),

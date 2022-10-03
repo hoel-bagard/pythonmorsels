@@ -73,7 +73,7 @@ def main():
     # Bonus 2
     v = Vector(1, 2, 3)
     try:
-        v.x = 4
+        v.x = 4  # type: ignore
         raise TypeError("Vectors should be immutable")
     except AttributeError:
         pass
