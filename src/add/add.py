@@ -1,13 +1,12 @@
-
 def add1(matrix1: list[list[int]], matrix2: list[list[int]]) -> list[list[int]]:
-    res = []
+    res: list[list[int]] = []
     for vector1, vector2 in zip(matrix1, matrix2):
         res.append([num1 + num2 for num1, num2 in zip(vector1, vector2)])
     return res
 
 
-def add2(*matrices: list[list[list[int]]]) -> list[list[int]]:
-    res = []
+def add2(*matrices: list[list[int]]) -> list[list[int]]:
+    res: list[list[int]] = []
     try:
         for vectors in zip(*matrices, strict=True):
             res.append([sum(numbers) for numbers in zip(*vectors, strict=True)])
