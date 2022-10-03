@@ -1,18 +1,19 @@
 import math
+from collections.abc import Iterable
 from typing import Optional
 
 
-class float_range:  # noqa: N801
+class float_range(Iterable[float]):  # noqa: N801
     def __init__(self, start: float, stop: Optional[float] = None, step: float = 1):
         self.start = start if stop is not None else 0
         self.stop = stop if stop is not None else start
         self.step = step
 
-    def _item(self, index):
+    def _item(self, index: int) -> float:
         """Return item at given location, even if out of bounds."""
         return self.start + self.step*index
 
-    def __getitem__(self, key: int | slice):
+    def __getitem__(self, key: int | slice) -> float | "float_range":
         if isinstance(key, slice):
             start, stop, step = key.indices(len(self))
             return float_range(self._item(start), self._item(stop), self.step * step)
@@ -22,10 +23,10 @@ class float_range:  # noqa: N801
             return self._item(len(self) + key)
         raise IndexError(f"float_range index out of range: {key}")
 
-    def __len__(self):
+    def __len__(self) -> int:
         return max(0, math.ceil((self.stop-self.start) / self.step))
 
-    def __eq__(self, other: object):
+    def __eq__(self, other: object) -> bool:
         if isinstance(other, (float_range, range)):
             if len(self) == len(other) == 0:
                 return True
@@ -34,11 +35,11 @@ class float_range:  # noqa: N801
                     and len(self) == len(other))
         return NotImplemented
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{type(self).__name__}({self.start}, {self.stop}, {self.step})"
 
 
-def test_equal(res, expected_res):
+def test_equal(res: object, expected_res: object) -> None:
     assert res == expected_res, f"Wrong result, got:\n\t{res}\nbut expected\n\t {expected_res}"
 
 
@@ -84,10 +85,10 @@ def main():
     # Bonus 3
     # For the third bonus, make the float_range objects sliceable:
     my_range = float_range(0.5, 7, 0.75)
-    test_equal(list(my_range[:2]), [0.5, 1.25])
-    test_equal(list(my_range[-1:100]), [6.5])
-    test_equal(list(my_range[-3:]), [5.0, 5.75, 6.5])
-    test_equal(list(my_range[::2]), [0.5, 2.0, 3.5, 5.0, 6.5])
+    test_equal(list(my_range[:2]), [0.5, 1.25])  # type: ignore
+    test_equal(list(my_range[-1:100]), [6.5])  # type: ignore
+    test_equal(list(my_range[-3:]), [5.0, 5.75, 6.5])  # type: ignore
+    test_equal(list(my_range[::2]), [0.5, 2.0, 3.5, 5.0, 6.5])  # type: ignore
 
     print("Passed the tests.")
 
