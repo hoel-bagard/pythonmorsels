@@ -42,7 +42,7 @@ def test_none_value():
 
 
 def test_string_and_range():
-    out = [0, 'H', 1, 'e', 2, 'l', 3, 'l', 4, 'o']
+    out = [0, "H", 1, "e", 2, "l", 3, "l", 4, "o"]
     assert_equal_iterables(interleave(range(5), "Hello"), out)
 
 

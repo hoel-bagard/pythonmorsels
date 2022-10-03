@@ -47,7 +47,7 @@ def test_mirrors_attribute_from_initializer(aliased_instance: AliasedClass1, exp
 
 @pytest.mark.parametrize("aliased_instance, first_value, second_value",
                          [(v := 1, v, v+1),
-                          (v := "123", v, v+'1')],
+                          (v := "123", v, v+"1")],
                          indirect=["aliased_instance"])
 def test_attribute_mirroring_maintained(aliased_instance: AliasedClass1,
                                         first_value: int | str,

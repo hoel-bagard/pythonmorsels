@@ -1,3 +1,4 @@
+# type: ignore
 import atexit
 import multiprocessing
 import sys
@@ -46,7 +47,7 @@ class DeepFlattenTests(unittest.TestCase):
 
         squares = (n**2 for n in [1, 2, 3])
         self.assertEqual(next(deep_flatten(squares)), 1)
-        # The below lines test that the incoming generator isn't exhausted.
+        # The below lines test that the incoming generator isn"t exhausted.
         # It may look odd to test the squares input, but this is correct
         # because after 1 item has been consumed from the deep_flatten
         # iterator, squares should also only have 1 item consumed from it.
@@ -54,10 +55,10 @@ class DeepFlattenTests(unittest.TestCase):
             self.assertEqual(next(squares), 4, "squares is partially consumed")
         except StopIteration:
             self.fail("The incoming squares iterator was fully consumed!")
-        # When we consume another item from deep_flatten, it'll skip over 4!
+        # When we consume another item from deep_flatten, it"ll skip over 4!
         self.assertEqual(next(deep_flatten(squares)), 9)
 
-        # If the above didn't work, this would really break
+        # If the above didn"t work, this would really break
         from itertools import count
         squares = (n**2 for n in count())
         self.assertEqual(next(deep_flatten(squares)), 0)
@@ -68,10 +69,10 @@ class DeepFlattenTests(unittest.TestCase):
     # @unittest.expectedFailure
     def test_flatten_with_strings(self):
         inputs = [
-            ['cats', ['carl', 'cate']],
-            ['dogs', ['darlene', 'doug']],
+            ["cats", ["carl", "cate"]],
+            ["dogs", ["darlene", "doug"]],
         ]
-        outputs = ['cats', 'carl', 'cate', 'dogs', 'darlene', 'doug']
+        outputs = ["cats", "carl", "cate", "dogs", "darlene", "doug"]
         timeouts = {
             "win32": 1.2,
             "darwin": 1,
@@ -91,7 +92,7 @@ class AllowUnexpectedSuccessRunner(unittest.TextTestRunner):
 
 def worker(function, args, kwargs, sender, receiver):
     """Send return value of function call through given pipe."""
-    receiver.close()  # We're only sending
+    receiver.close()  # We"re only sending
     try:
         sender.send([function(*args, **kwargs), None])
     except BaseException as exc:
@@ -103,14 +104,14 @@ def with_timeout(function, timeout):
     """Return function to call the given function with timeout (in seconds)."""
     @wraps(function)
     def wrapper(*args, **kwargs):
-        # AWS Lambda doesn't support Pool or Queue
+        # AWS Lambda doesn"t support Pool or Queue
         receiver, sender = multiprocessing.Pipe()
         process = multiprocessing.Process(
             target=worker,
             args=(function, args, kwargs, sender, receiver),
         )
         process.start()
-        sender.close()  # We're only receiving
+        sender.close()  # We"re only receiving
         atexit.register(terminate_process, process)  # Make sure to terminate
         try:
             if receiver.poll(timeout):
@@ -122,7 +123,7 @@ def with_timeout(function, timeout):
             else:
                 raise TimeoutError("Took too long (infinite loop?)")
         finally:
-            receiver.close()  # We're done receiving
+            receiver.close()  # We"re done receiving
             process.terminate()
 
     return wrapper

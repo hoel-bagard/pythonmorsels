@@ -14,21 +14,21 @@ def count_words(sentence: str) -> dict[str, int]:
 def main():
     # Base exercise:
     res = count_words("oh what a day what a lovely day")
-    expected_res = {'oh': 1, 'what': 2, 'a': 2, 'day': 2, 'lovely': 1}
+    expected_res = {"oh": 1, "what": 2, "a": 2, "day": 2, "lovely": 1}
     assert res == expected_res, f"Wrong result, got:\n\t{res}\nbut expected\n\t {expected_res}"
 
     res = count_words("don't stop believing")
-    expected_res = {"don't": 1, 'stop': 1, 'believing': 1}
+    expected_res = {"don't": 1, "stop": 1, "believing": 1}
     assert res == expected_res, f"Wrong result, got:\n\t{res}\nbut expected\n\t {expected_res}"
 
     # Bonus 1
     res = count_words("Oh what a day what a lovely day")
-    expected_res = {'oh': 1, 'what': 2, 'a': 2, 'day': 2, 'lovely': 1}
+    expected_res = {"oh": 1, "what": 2, "a": 2, "day": 2, "lovely": 1}
     assert res == expected_res, f"Wrong result, got:\n\t{res}\nbut expected\n\t {expected_res}"
 
     # Bonus 2
     res = count_words("Oh what a day, what a lovely day!")
-    expected_res = {'oh': 1, 'what': 2, 'a': 2, 'day': 2, 'lovely': 1}
+    expected_res = {"oh": 1, "what": 2, "a": 2, "day": 2, "lovely": 1}
     assert res == expected_res, f"Wrong result, got:\n\t{res}\nbut expected\n\t {expected_res}"
 
 

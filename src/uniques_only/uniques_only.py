@@ -2,7 +2,8 @@ import time
 from collections.abc import Hashable, Iterable, Iterator
 from typing import TypeVar
 
-T = TypeVar('T')
+
+T = TypeVar("T")
 
 
 def uniques_only(in_iter: Iterable[T]) -> Iterator[T]:
@@ -53,7 +54,7 @@ def main():
     assert isinstance(uniques_only([1, 2, 3, 4]), Iterator)
 
     # Bonus 2
-    test_equal(list(uniques_only([['a', 'b'], ['a', 'c'], ['a', 'b']])), [['a', 'b'], ['a', 'c']])
+    test_equal(list(uniques_only([["a", "b"], ["a", "c"], ["a", "b"]])), [["a", "b"], ["a", "c"]])
     print("Passed the tests!")
 
 

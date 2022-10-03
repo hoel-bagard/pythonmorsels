@@ -1,13 +1,13 @@
 """Tests for the tail exercise using Pytest."""
 from time import perf_counter
+from typing import Any
 
 import pytest
-
 
 from src.timer.timer import Timer
 
 
-def sleep(duration):
+def sleep(duration: float):
     now = perf_counter()
     end = now + duration
     while now < end:
@@ -32,7 +32,7 @@ def test_two_timers():
         with Timer() as timer2:
             sleep(0.05)
         sleep(0.05)
-    assert timer2.elapsed < timer1.elapsed
+    assert timer2.elapsed < timer1.elapsed  # type: ignore
 
 
 def test_reusing_same_timer():
@@ -70,12 +70,12 @@ class TestBonus1:
 class TestBonus2:
     def test_works_as_decorator(self):
         @Timer
-        def wait(*args, **kwargs):
+        def wait(*args: Any, **kwargs: Any):
             sleep(0.01)
             return args, kwargs
-        args, kwargs = wait(1, a=3)
+        args, kwargs = wait(1, a=3)  # type: ignore
         assert args == (1,)
-        assert kwargs == {'a': 3}
+        assert kwargs == {"a": 3}
         assert pytest.approx(wait.elapsed, abs=1e-3) == 0.01
         assert wait.runs == [wait.elapsed]
 

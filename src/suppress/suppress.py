@@ -1,7 +1,7 @@
 """Suppress exercise from python morsel."""
 
-from contextlib import ContextDecorator   # Class version
-from contextlib import contextmanager    # Function version
+from contextlib import ContextDecorator  # Class version
+from contextlib import contextmanager  # Function version
 from dataclasses import dataclass
 from types import TracebackType
 from typing import Iterator, Optional, Sized, Type
@@ -40,8 +40,6 @@ class suppress(ContextDecorator):  # noqa: N801
         return self.context
 
     def __exit__(self, exception_type: Type[Exception], exception: Exception, traceback: TracebackType) -> bool:
-        print(exception_type)
-        print("EEEE")
         if isinstance(exception, self.exceptions_types):
             self.context.exception = exception
             self.context.traceback = traceback
@@ -54,7 +52,7 @@ def main() -> None:
     # Main exercise
     with suppress(NameError):
         print("Hi!")
-        print("It's nice to meet you,", name)  # noqa
+        print("It's nice to meet you,", name)  # type: ignore  # noqa
         print("Goodbye!")
 
     # with suppress(TypeError):
@@ -69,7 +67,7 @@ def main() -> None:
     with suppress(ValueError, TypeError):
         int("Hello")
     with suppress(ValueError, TypeError):
-        int(None)
+        int(None)  # type: ignore
 
     # Bonus 2
     print("\nBonus 2 prints")
@@ -85,7 +83,7 @@ def main() -> None:
     def len_or_none(thing: Sized) -> int:
         return len(thing)
     print(len_or_none("Hello"))
-    print(len_or_none())
+    print(len_or_none())  # type: ignore
     print(len_or_none([1, 2, 3]))
 
 

@@ -7,7 +7,7 @@ import pytest
 from src.with_previous.with_previous import with_previous
 
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 def assert_equal_iterable(iterable1: Iterable[Optional[T]], iterable2: Iterable[Optional[T]]) -> None:
@@ -16,7 +16,7 @@ def assert_equal_iterable(iterable1: Iterable[Optional[T]], iterable2: Iterable[
 
 @pytest.mark.parametrize("iterable, expected_value",
                          [([1, 2, 3], [(1, None), (2, 1), (3, 2)]),
-                          (['1', '2'], [('1', None), ('2', '1')]),
+                          (["1", "2"], [("1", None), ("2", "1")]),
                           ([None, None], [(None, None), (None, None)])
                           ])
 def test_basic(iterable: Iterable[Optional[T]], expected_value: list[Optional[T]]):

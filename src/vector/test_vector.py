@@ -10,7 +10,7 @@ def tuple_sample() -> tuple[float, float, float]:
 
 
 @pytest.fixture
-def vector_sample(tuple_sample) -> Vector:
+def vector_sample(tuple_sample: tuple[float, float, float]) -> Vector:
     return Vector(*tuple_sample)
 
 
@@ -24,7 +24,7 @@ def test_equality_and_inequality(vector_sample: Vector, tuple_sample: tuple[int,
     assert not vector_sample != Vector(*tuple_sample)
 
 
-def test_iterable_vector(vector_sample: Vector, tuple_sample):
+def test_iterable_vector(vector_sample: Vector, tuple_sample: tuple[float, float, float]):
     x, y, z = vector_sample
     assert (x, y, z) == tuple_sample
 
@@ -33,30 +33,30 @@ def test_no_weird_extras():
     v1 = Vector(1, 2, 3)
     v2 = Vector(4, 5, 6)
     with pytest.raises(TypeError):
-        len(v1)
+        len(v1)  # type: ignore
     with pytest.raises(TypeError):
-        v1 < v2  # noqa: B015
+        v1 < v2  # type: ignore  # noqa: B015
     with pytest.raises(TypeError):
-        v1 > v2  # noqa: B015
+        v1 > v2  # type: ignore  # noqa: B015
     with pytest.raises(TypeError):
-        v1 <= v2  # noqa: B015
+        v1 <= v2  # type: ignore  # noqa: B015
     with pytest.raises(TypeError):
-        v1 >= v2  # noqa: B015
+        v1 >= v2  # type: ignore  # noqa: B015
     with pytest.raises(TypeError):
-        v1 + (1, 2, 3)
+        v1 + (1, 2, 3)  # type: ignore
     with pytest.raises(TypeError):
-        (1, 2, 3) + v1
+        (1, 2, 3) + v1  # type: ignore
     with pytest.raises(TypeError):
-        v1 - (1, 2, 3)
+        v1 - (1, 2, 3)  # type: ignore
     with pytest.raises(TypeError):
-        v1 * 'a'
+        v1 * "a"  # type: ignore
     with pytest.raises(TypeError):
-        v1 / v2
+        v1 / v2  # type: ignore
 
 
 def test_memory_efficient_attributes(vector_sample: Vector):
     with pytest.raises((AttributeError, TypeError)):
-        vector_sample.a = 3
+        vector_sample.a = 3  # type: ignore
     with pytest.raises((AttributeError, TypeError)):
         vector_sample.__dict__
 
@@ -86,5 +86,5 @@ def test_scaling():
 @pytest.mark.bonus3
 def test_immutable(vector_sample: Vector):
     with pytest.raises(AttributeError):
-        vector_sample.x = 4
+        vector_sample.x = 4  # type: ignore
     assert vector_sample.x == 1

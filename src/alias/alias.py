@@ -1,6 +1,7 @@
 from typing import Optional, TypeVar
 
-T = TypeVar('T')
+
+T = TypeVar("T")
 
 
 class alias:  # noqa: N801

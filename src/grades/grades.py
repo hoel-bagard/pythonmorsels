@@ -1,6 +1,6 @@
 def percent_to_grade(in_percentage: float, *, suffix: bool = False, round: bool = False) -> str:
     """Convert a percentage to a grade by using a specific flavor of the A-F grading system used in the US."""
-    grades = ["F"] + [grade + suf for grade in ["D", "C", "B", "A"] for suf in (('-', '', '+') if suffix else ('', ))]
+    grades = ["F"] + [grade + suf for grade in ["D", "C", "B", "A"] for suf in (("-", "", "+") if suffix else ("", ))]
     thresholds = [57 + 3*i + i//3 for i in range(1, len(grades))] if suffix else range(60, 91, 10)
     in_percentage = int(in_percentage + 0.5) if round else in_percentage
 
@@ -11,8 +11,8 @@ def percent_to_grade(in_percentage: float, *, suffix: bool = False, round: bool 
 
 
 def calculate_gpa(in_grades: list[str]) -> float:
-    """Accepts a sequence of letter grades and returns the grade point average based on the exercise's rules."""
-    grades = [grade + suffix for grade in ["D", "C", "B", "A"] for suffix in ('-', '', '+')]
+    """Accepts a sequence of letter grades and returns the grade point average based on the exercise"s rules."""
+    grades = [grade + suffix for grade in ["D", "C", "B", "A"] for suffix in ("-", "", "+")]
     grade_to_score: dict[str, float] = {"F": 0}
     grade_to_score |= {grade: round(2/3 + score/3, 2) for grade, score in zip(grades, range(len(grades)))}
 

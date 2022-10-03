@@ -5,18 +5,18 @@ import pytest
 from src.pluck.pluck import NestedDict, pluck
 
 
-N = TypeVar('N', bound=int)  # The tests only use ints for simplicity
-X = TypeVar('X')
+N = TypeVar("N", bound=int)  # The tests only use ints for simplicity
+X = TypeVar("X")
 
 
 @pytest.fixture
 def example_nested_dict() -> NestedDict[int]:
-    return {'a': {'b': 5, 'z': 20}, 'c': {'d': 3}, 'x': 40}
+    return {"a": {"b": 5, "z": 20}, "c": {"d": 3}, "x": 40}
 
 
 @pytest.mark.parametrize("path, expected_result", [
-    ('x', 40),
-    ('c', {'d': 3}),
+    ("x", 40),
+    ("c", {"d": 3}),
 ])
 def test_pluck_top_level(example_nested_dict: NestedDict[N], path: str, expected_result: NestedDict[N] | N):
     assert pluck(example_nested_dict, path) == expected_result
@@ -31,18 +31,18 @@ def test_pluck_one_level_deep(example_nested_dict: NestedDict[N], path: str, exp
 
 
 @pytest.mark.parametrize("path, expected_result", [
-    ("a.b.c", {'d': {'e': 4}}),
-    ("a.b.c.d", {'e': 4}),
+    ("a.b.c", {"d": {"e": 4}}),
+    ("a.b.c.d", {"e": 4}),
     ("a.b.c.d.e", 4),
 ])
 def test_pluck_many_levels_deep(path: str, expected_result: NestedDict[N] | N):
-    deep_nested_dict: NestedDict[int] = {'a': {'b': {'c': {'d': {'e': 4}}}}}
+    deep_nested_dict: NestedDict[int] = {"a": {"b": {"c": {"d": {"e": 4}}}}}
     assert pluck(deep_nested_dict, path) == expected_result
 
 
 @pytest.mark.parametrize("path", [
     ("c.e"),
-    ('z'),
+    ("z"),
 ])
 def test_exception_on_missing_item(example_nested_dict: NestedDict[N], path: str):
     with pytest.raises(KeyError):
@@ -51,9 +51,9 @@ def test_exception_on_missing_item(example_nested_dict: NestedDict[N], path: str
 
 @pytest.mark.bonus1
 @pytest.mark.parametrize("path, sep, expected_result", [
-    ("c/d", '/', 3),
-    ("a.b", '.', 5),
-    ("a z", ' ', 20),
+    ("c/d", "/", 3),
+    ("a.b", ".", 5),
+    ("a z", " ", 20),
 ])
 def test_specifying_separator(example_nested_dict: NestedDict[N],
                               path: str,

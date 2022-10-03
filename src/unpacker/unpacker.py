@@ -3,7 +3,8 @@ from collections import OrderedDict
 from collections.abc import Iterable, Iterator
 from typing import Generic, Optional, TypeVar
 
-T = TypeVar('T')
+
+T = TypeVar("T")
 
 
 class Unpacker(Generic[T]):
@@ -72,33 +73,33 @@ def assert_equal(res: object, expected_res: object) -> None:
 
 def main():
     # Base exercise:
-    d = {'hello': 4, 'hi': 5}
+    d = {"hello": 4, "hi": 5}
     u = Unpacker(d)
-    assert_equal(u['hello'], 4)
+    assert_equal(u["hello"], 4)
     assert_equal(u.hi, 5)  # type: ignore
 
-    u['hello'] = 8
+    u["hello"] = 8
     assert_equal(u.hello, 8)  # type: ignore
     u.hello = 5
     assert_equal(u.hello, 5)
 
     # Bonus 1
-    coordinates = OrderedDict([('x', 34), ('y', 67)])
+    coordinates = OrderedDict([("x", 34), ("y", 67)])
     point = Unpacker(coordinates)
     x_axis, y_axis = point
     assert_equal(x_axis, 34)
     assert_equal(y_axis, 67)
 
     # Bonus 2
-    row = Unpacker({'a': 234, 'b': 54})
-    row['a'] = 11
-    row['c'] = 45
+    row = Unpacker({"a": 234, "b": 54})
+    row["a"] = 11
+    row["c"] = 45
     assert_equal(str(row), "Unpacker(a=11, b=54, c=45)")
 
     # Bonus 3
-    row = Unpacker({'a': 234, 'b': 54})
-    assert_equal(row['a', 'b'], (234, 54))
-    row['b', 'a'] = (11, 22)
+    row = Unpacker({"a": 234, "b": 54})
+    assert_equal(row["a", "b"], (234, 54))
+    row["b", "a"] = (11, 22)
     assert_equal(str(row), "Unpacker(a=22, b=11)")
     print("Passed the tests")
 

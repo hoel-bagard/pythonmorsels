@@ -9,7 +9,7 @@ from importlib.machinery import SourceFileLoader
 from importlib.util import module_from_spec, spec_from_loader
 from io import StringIO
 from textwrap import indent
-from typing import Callable, Optional
+from typing import Callable, Optional, Type
 from unittest.mock import patch
 
 import pytest
@@ -183,7 +183,7 @@ class TestPrintFullScreen:
         indentation = (nb_columns-text_width) // 2
 
         assert output[:6] == "\x1b[H\x1b[J"  # Check that the screen was cleaned
-        assert output[6:] == '\n' * lines_before + ' ' * indentation + hello_world + '\n'
+        assert output[6:] == "\n" * lines_before + " " * indentation + hello_world + "\n"
 
     @pytest.mark.parametrize("nb_columns, nb_lines",
                              [(100, 30),
@@ -206,7 +206,7 @@ class TestPrintFullScreen:
         indentation = (nb_columns-text_width) // 2
 
         assert output[:6] == "\x1b[H\x1b[J"  # Check that the screen was cleaned
-        assert output[6:] == '\n' * lines_before + '\n'.join(' ' * indentation + line for line in lines) + '\n'
+        assert output[6:] == "\n" * lines_before + "\n".join(" " * indentation + line for line in lines) + "\n"
 
 
 # @pytest.mark.bonus2
@@ -321,7 +321,7 @@ class DummyError(Exception):
     """No code will ever raise this exception."""
 
 
-def run_program(arguments: str, raises = DummyError) -> str:  # type: ignore (cannot type exception)
+def run_program(arguments: str, raises: Type[Exception] = DummyError) -> str:
     """Run python program at given path with given arguments and return the stdout and stderr contents.
 
     Args:

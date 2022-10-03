@@ -1,10 +1,6 @@
 from collections.abc import Iterator
 from dataclasses import astuple, dataclass
 from typing import Union
-# from typing import TypeVar
-
-
-# TVector = TypeVar("TVector", bound="Vector")
 
 
 @dataclass(slots=True, frozen=True)
@@ -77,7 +73,7 @@ def main():
     # Bonus 2
     v = Vector(1, 2, 3)
     try:
-        v.x = 4
+        v.x = 4  # type: ignore
         raise TypeError("Vectors should be immutable")
     except AttributeError:
         pass

@@ -43,4 +43,3 @@ As a second bonus, make sure your function works with any iterable, not just seq
 You should make sure you don't loop at all if n is 0 or negative.
 
 See if you can make your function relatively memory efficient (if you're looping over a very long iterable, don't store the entire thing in memory).
-

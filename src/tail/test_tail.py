@@ -7,14 +7,14 @@ import pytest
 from src.tail.tail import tail
 
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 @pytest.mark.parametrize("iterable, length, expected_value",
                          [([1, 2], 0, []),
                           ([1, 2], 1, [2]),
                           ([1, 2], 2, [1, 2]),
-                          ("test", 3, ['e', 's', 't']),
+                          ("test", 3, ["e", "s", "t"]),
                           ((3, 2, 1), 3, [3, 2, 1])])
 def test_basic(iterable: Iterable[T], length: int, expected_value: list[T]):
     assert tail(iterable, length) == expected_value

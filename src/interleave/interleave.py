@@ -2,6 +2,7 @@ from collections.abc import Iterable
 from itertools import zip_longest
 from typing import Generator, TypeVar
 
+
 T1 = TypeVar("T1")
 T2 = TypeVar("T2")
 

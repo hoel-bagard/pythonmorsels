@@ -1,9 +1,9 @@
+# type: ignore
 import sys
 import unittest
 from collections.abc import Generator
 from functools import partial
 from timeit import timeit
-
 
 from float_range import float_range
 
@@ -82,7 +82,7 @@ class FloatRangeTests(unittest.TestCase):
             )
         else:
             size = sys.getsizeof(response)
-        self.assertLess(size, 8000, 'Too much memory used')
+        self.assertLess(size, 8000, "Too much memory used")
         self.assertNotEqual(type(response), list)
         self.assertNotEqual(type(response), tuple)
 

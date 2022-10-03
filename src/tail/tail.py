@@ -3,7 +3,7 @@ from collections.abc import Iterable
 from typing import TypeVar
 
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 def tail(iterable: Iterable[T], nb_elts: int) -> list[T]:
@@ -18,12 +18,12 @@ def main():
     # Base exercise:
     print("Testing the base exercise")
     test_equal(tail([1, 2, 3, 4, 5], 3), [3, 4, 5])
-    test_equal(tail("hello", 2), ['l', 'o'])
+    test_equal(tail("hello", 2), ["l", "o"])
     test_equal(tail("hello", 0), [])
 
     # Bonus 1
     print("Testing bonus 1")
-    test_equal(tail('hello', -2), [])
+    test_equal(tail("hello", -2), [])
 
     # Bonus 2
     print("Testing bonus 2")
