@@ -1,5 +1,6 @@
 from typing import TypeVar
 
+
 T = TypeVar("T")
 D = TypeVar("D")
 NestedDict = dict[str, "NestedDict[T]" | T]

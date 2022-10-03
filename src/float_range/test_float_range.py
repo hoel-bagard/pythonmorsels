@@ -5,7 +5,6 @@ from collections.abc import Generator
 from functools import partial
 from timeit import timeit
 
-
 from float_range import float_range
 
 

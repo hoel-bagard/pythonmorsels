@@ -5,6 +5,7 @@ from collections import UserString
 from functools import total_ordering
 from typing import TypeVar
 
+
 T = TypeVar("T")
 # TFuzzyString = TypeVar("TFuzzyString", bound="FuzzyString")
 

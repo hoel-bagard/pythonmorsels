@@ -1,10 +1,6 @@
 from collections.abc import Iterator
 from dataclasses import astuple, dataclass
 from typing import Union
-# from typing import TypeVar
-
-
-# TVector = TypeVar("TVector", bound="Vector")
 
 
 @dataclass(slots=True, frozen=True)

@@ -1,7 +1,6 @@
 # type: ignore
 import unittest
 
-
 from permadict import PermaDict
 
 
@@ -101,8 +100,8 @@ class AllowUnexpectedSuccessRunner(unittest.TextTestRunner):
 
 
 if __name__ == "__main__":
-    from platform import python_version
     import sys
+    from platform import python_version
     if sys.version_info < (3, 6):
         sys.exit("Running {}.  Python 3.6 required.".format(python_version()))
     unittest.main(verbosity=2, testRunner=AllowUnexpectedSuccessRunner)

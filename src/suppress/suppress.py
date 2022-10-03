@@ -1,7 +1,7 @@
 """Suppress exercise from python morsel."""
 
-from contextlib import ContextDecorator   # Class version
-from contextlib import contextmanager    # Function version
+from contextlib import ContextDecorator  # Class version
+from contextlib import contextmanager  # Function version
 from dataclasses import dataclass
 from types import TracebackType
 from typing import Iterator, Optional, Sized, Type

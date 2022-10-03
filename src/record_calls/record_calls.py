@@ -3,6 +3,7 @@ import traceback
 from dataclasses import dataclass
 from typing import Any, Callable, Optional, ParamSpec, TypeVar
 
+
 _P = ParamSpec("_P")
 _R = TypeVar("_R")
 

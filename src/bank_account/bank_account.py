@@ -1,5 +1,6 @@
 from typing import ClassVar, TypeVar
 
+
 TBankAccount = TypeVar("TBankAccount", bound="BankAccount")
 
 

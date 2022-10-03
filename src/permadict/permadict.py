@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 from collections import UserDict
-from typing import Iterable
-from typing import TYPE_CHECKING
+from typing import Iterable, TYPE_CHECKING
+
+
 if TYPE_CHECKING:
     from _typeshed import SupportsKeysAndGetItem
 

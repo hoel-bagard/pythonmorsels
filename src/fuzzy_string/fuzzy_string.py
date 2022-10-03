@@ -2,6 +2,7 @@ import unicodedata
 from collections import UserString
 from typing import TypeVar
 
+
 T = TypeVar("T")
 
 

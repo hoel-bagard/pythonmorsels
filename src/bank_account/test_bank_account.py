@@ -93,6 +93,7 @@ class BankAccountTests(unittest.TestCase):
     def test_account_number_and_accounts_registry(self):
         # Re-import the BankAccount class
         import importlib
+
         import bank_account
         importlib.reload(bank_account)
         from bank_account import BankAccount
@@ -153,8 +154,8 @@ class AllowUnexpectedSuccessRunner(unittest.TextTestRunner):
 
 
 if __name__ == "__main__":
-    from platform import python_version
     import sys
+    from platform import python_version
     if sys.version_info < (3, 6):
         sys.exit("Running {}.  Python 3.6 required.".format(python_version()))
     unittest.main(verbosity=2, testRunner=AllowUnexpectedSuccessRunner)
