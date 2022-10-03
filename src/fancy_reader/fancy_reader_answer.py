@@ -1,10 +1,11 @@
 import csv
-from collections import namedtuple
+from collections.abc import Iterable
 from functools import cached_property
+from typing import Any, NamedTuple
 
 
 class FancyReader:
-    def __init__(self, iterable, **kwargs):
+    def __init__(self, iterable: Iterable[str], **kwargs: dict[str, Any]):
         self.reader = csv.DictReader(iterable, **kwargs)
 
     def __iter__(self):
@@ -23,4 +24,4 @@ class FancyReader:
 
     @cached_property
     def make_row(self):
-        return namedtuple("Row", self.fieldnames)
+        return NamedTuple("Row", self.fieldnames)
