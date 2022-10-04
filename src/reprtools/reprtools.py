@@ -1,7 +1,8 @@
 def format_arguments(*args: object, **kwargs: object) -> str:
     res_str = ", ".join(repr(arg) for arg in args)
-    if kwargs:
+    if args and kwargs:
         res_str += ", "
+    if kwargs:
         res_str += ", ".join(f"{key}={repr(value)}" for key, value in kwargs.items())
     return res_str
 
