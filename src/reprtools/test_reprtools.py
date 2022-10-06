@@ -1,5 +1,5 @@
 """Tests for the reprtools exercise using pytest."""
-# from collections import UserDict
+from collections import UserDict
 
 import pytest
 
@@ -82,47 +82,42 @@ class MakeReprTests:
         assert repr(Point(x=3, y=4)) == "Point(x=3, y=4)"
 
 
-# # To test bonus 2, comment out the next line
-# @unittest.expectedFailure
-# class AutoReprTests(unittest.TestCase):
+@pytest.mark.bonus2
+class TestAutoRepr:
+    """Tests for auto_repr."""
 
-#     """Tests for auto_repr."""
+    def test_with_args(self):
+        from src.reprtools.reprtools import auto_repr
 
-#     def test_with_args(self):
-#         from reprtools import auto_repr
+        @auto_repr(args=["x", "y", "z"])
+        class Point:
+            def __init__(self, x: int, y: int, z: int):
+                self.x, self.y, self.z = x, y, z
+        assert str(Point(1, 2, 3)) == "Point(1, 2, 3)"
+        assert repr(Point(x=3, y=4, z=5)) == "Point(3, 4, 5)"
 
-#         @auto_repr(args=['x', 'y', 'z'])
-#         class Point:
-#             def __init__(self, x, y, z):
-#                 self.x, self.y, self.z = x, y, z
-#         self.assertEqual(str(Point(1, 2, 3)), "Point(1, 2, 3)")
-#         self.assertEqual(repr(Point(x=3, y=4, z=5)), "Point(3, 4, 5)")
+    def test_with_kwargs(self):
+        from src.reprtools.reprtools import auto_repr
 
-#     def test_with_kwargs(self):
-#         from reprtools import auto_repr
+        @auto_repr(kwargs=["x", "y"])
+        class Point:
+            def __init__(self, x: int, y: int, color: str = "purple"):
+                self.x, self.y = x, y
+                self.color = color
+        assert str(Point(1, 2)) == "Point(x=1, y=2)"
+        assert repr(Point(x=3, y=4)) == "Point(x=3, y=4)"
 
-#         @auto_repr(kwargs=['x', 'y'])
-#         class Point:
-#             def __init__(self, x, y, color="purple"):
-#                 self.x, self.y = x, y
-#                 self.color = color
-#         self.assertEqual(str(Point(1, 2)), "Point(x=1, y=2)")
-#         self.assertEqual(repr(Point(x=3, y=4)), "Point(x=3, y=4)")
+    def test_with_inheritance(self):
+        from src.reprtools.reprtools import auto_repr
 
-#     def test_with_inheritance(self):
-#         from reprtools import auto_repr
-
-#         @auto_repr(kwargs=['x', 'y', 'data'])
-#         class Point(UserDict):
-#             def __init__(self, x, y, **data):
-#                 self.x, self.y = x, y
-#                 super().__init__(data)
-#         point = Point(1, 2, color="purple")
-#         self.assertEqual(
-#             str(point),
-#             "Point(x=1, y=2, data={'color': 'purple'})",
-#         )
-#         self.assertEqual(list(point), ["color"])
+        @auto_repr(kwargs=["x", "y", "data"])
+        class Point(UserDict[str, int | str]):
+            def __init__(self, x: int, y: int, **data: str):
+                self.x, self.y = x, y
+                super().__init__(data)
+        point = Point(1, 2, color="purple")
+        assert str(point) == "Point(x=1, y=2, data={'color': 'purple'})"
+        assert list(point) == ["color"]
 
 
 # # To test bonus 3, comment out the next line

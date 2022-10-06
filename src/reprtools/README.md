@@ -56,6 +56,7 @@ Point(1, 2, color='purple')
 >>> Point(x=3, y=4, color='green')
 Point(3, 4, color='green')
 ```
+
 #### Bonus 3
 For the third bonus, I'd like you to allow your `auto_repr` class decorator to called on the class directly (with no arguments given).
 

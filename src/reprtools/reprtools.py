@@ -1,5 +1,9 @@
 from collections.abc import Callable
-from typing import Optional
+from typing import Optional, ParamSpec, TypeVar
+
+
+_P = ParamSpec("_P")
+_R = TypeVar("_R")
 
 
 def format_arguments(*args: object, **kwargs: object) -> str:
@@ -19,6 +23,14 @@ def make_repr(args: Optional[list[str]] = None, kwargs: Optional[list[str]] = No
     return repr
 
 
+def auto_repr(args: Optional[list[str]] = None,
+              kwargs: Optional[list[str]] = None) -> Callable[[Callable[_P, _R]], Callable[_P, _R]]:
+    def decorator(cls: Callable[_P, _R]) -> Callable[_P, _R]:
+        cls.__repr__ = make_repr(args, kwargs)
+        return cls
+    return decorator
+
+
 def assert_equal(res: str, expected_res: str):
     assert res == expected_res, f"Wrong result, got:\n\t{res}\nbut expected\n\t{expected_res}"
 
@@ -33,17 +45,26 @@ def main():
     # Bonus 1
     print("\nBonus 1")
 
-    class Point:
+    class PointB1:
         def __init__(self, x: int, y: int, color: str = "purple"):
             self.x, self.y = x, y
             self.color = color
         __repr__ = make_repr(args=["x", "y"], kwargs=["color"])  # pyright: ignore
 
-    assert_equal(repr(Point(1, 2)), "Point(1, 2, color='purple')")
-    assert_equal(repr(Point(x=3, y=4, color="green")), "Point(3, 4, color='green')")
+    assert_equal(repr(PointB1(1, 2)), "PointB1(1, 2, color='purple')")
+    assert_equal(repr(PointB1(x=3, y=4, color="green")), "PointB1(3, 4, color='green')")
 
     # Bonus 2
     print("\nBonus 2")
+
+    @auto_repr(args=['x', 'y'], kwargs=['color'])
+    class PointB2:
+        def __init__(self, x: int, y: int, color: str = "purple"):
+            self.x, self.y = x, y
+            self.color = color
+
+    assert_equal(repr(PointB2(1, 2)), "PointB2(1, 2, color='purple')")
+    assert_equal(repr(PointB2(x=3, y=4, color='green')), "PointB2(3, 4, color='green')")
 
     # Bonus 3
     print("\nBonus 3")
