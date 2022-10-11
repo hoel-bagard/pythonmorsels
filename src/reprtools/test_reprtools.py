@@ -1,5 +1,6 @@
 """Tests for the reprtools exercise using pytest."""
 from collections import UserDict
+from typing import Optional
 
 import pytest
 
@@ -120,100 +121,74 @@ class TestAutoRepr:
         assert list(point) == ["color"]
 
 
-# # To test bonus 3, comment out the next line
-# @unittest.expectedFailure
-# class auto_repr(unittest.TestCase):
+@pytest.mark.bonus2
+class TestFullAutoRepr:
+    """Tests for auto_repr with no arguments."""
 
-#     """Tests for auto_repr with no arguments."""
+    def test_with_concrete_attributes_no_defaults(self):
+        from src.reprtools.reprtools import auto_repr
 
-#     def test_with_concrete_attributes_no_defaults(self):
-#         from reprtools import auto_repr
+        @auto_repr
+        class Point:
+            def __init__(self, x: int, y: int, z: int):
+                self.x, self.y, self.z = x, y, z
+        assert str(Point(1, 2, 3)) == "Point(x=1, y=2, z=3)"
+        assert repr(Point(x=3, y=4, z=5)) == "Point(x=3, y=4, z=5)"
 
-#         @auto_repr
-#         class Point:
-#             def __init__(self, x, y, z):
-#                 self.x, self.y, self.z = x, y, z
-#         self.assertEqual(str(Point(1, 2, 3)), "Point(x=1, y=2, z=3)")
-#         self.assertEqual(repr(Point(x=3, y=4, z=5)), "Point(x=3, y=4, z=5)")
+    def test_argument_with_a_default(self):
+        from src.reprtools.reprtools import auto_repr
 
-#     def test_argument_with_a_default(self):
-#         from reprtools import auto_repr
+        @auto_repr
+        class Thing:
+            def __init__(self, name: str, color: str = "purple"):
+                self.name = name
+                self.color = color
+        assert str(Thing("duck")) == "Thing(name='duck', color='purple')"
 
-#         @auto_repr
-#         class Thing:
-#             def __init__(self, name, color="purple"):
-#                 self.name = name
-#                 self.color = color
-#         self.assertEqual(
-#             str(Thing("duck")),
-#             "Thing(name='duck', color='purple')",
-#         )
+    def test_with_property(self):
+        from src.reprtools.reprtools import auto_repr
 
-#     def test_with_property(self):
-#         from reprtools import auto_repr
+        @auto_repr
+        class BankAccount:
+            def __init__(self, balance: int = 0):
+                self._balance = balance
+                BankAccount.current_id = 1
+                self.account_id = BankAccount.current_id
 
-#         @auto_repr
-#         class BankAccount:
+            @property
+            def balance(self):
+                return self._balance
 
-#             current_id = 0
+        assert str(BankAccount()) == "BankAccount(balance=0)"
+        assert str(BankAccount(5)) == "BankAccount(balance=5)"
 
-#             def __init__(self, balance=0):
-#                 self._balance = balance
-#                 BankAccount.current_id += 1
-#                 self.account_id = BankAccount.current_id
+    def test_argument_without_an_attribute(self):
+        from src.reprtools.reprtools import auto_repr
 
-#             @property
-#             def balance(self):
-#                 return self._balance
+        @auto_repr
+        class BankAccount:
 
-#         self.assertEqual(
-#             str(BankAccount()),
-#             "BankAccount(balance=0)",
-#         )
-#         self.assertEqual(
-#             str(BankAccount(5)),
-#             "BankAccount(balance=5)",
-#         )
+            def __init__(self, opening_balance: int):
+                self.balance = opening_balance
 
-#     def test_argument_without_an_attribute(self):
-#         from reprtools import auto_repr
+        with pytest.raises(TypeError):
+            str(BankAccount(10))
 
-#         @auto_repr
-#         class BankAccount:
+        with pytest.raises(TypeError):
+            repr(BankAccount(10))
 
-#             def __init__(self, opening_balance):
-#                 self.balance = opening_balance
+    def test_default_argument_without_an_attribute(self):
+        from src.reprtools.reprtools import auto_repr
 
-#         with self.assertRaises(TypeError):
-#             str(BankAccount(10))
+        @auto_repr
+        class BankAccount:
+            def __init__(self, balance: int = 0, custom_id: Optional[int] = None):
+                self._balance = balance
+                self.account_id = custom_id if custom_id is not None else 1
 
-#         with self.assertRaises(TypeError):
-#             repr(BankAccount(10))
+            @property
+            def balance(self):
+                return self._balance
 
-#     def test_default_argument_without_an_attribute(self):
-#         from reprtools import auto_repr
-
-#         @auto_repr
-#         class BankAccount:
-
-#             current_id = 0
-
-#             def __init__(self, balance=0, custom_id=None):
-#                 self._balance = balance
-#                 if not custom_id:
-#                     BankAccount.current_id += 1
-#                     custom_id = BankAccount.current_id
-#                 self.account_id = custom_id
-
-#             @property
-#             def balance(self):
-#                 return self._balance
-
-#         self.assertEqual(
-#             str(BankAccount(custom_id=10)),
-#             "BankAccount(balance=0)",
-#         )
-#         self.assertEqual(
-#             str(BankAccount(5)),
-#             "BankAccount(balance=5)",
-#         )
+        assert str(BankAccount(custom_id=10)) == "BankAccount(balance=0)"
+        assert str(BankAccount(5)) == "BankAccount(balance=5)"
