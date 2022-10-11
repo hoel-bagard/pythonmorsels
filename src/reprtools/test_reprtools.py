@@ -132,8 +132,8 @@ class TestFullAutoRepr:
         class Point:
             def __init__(self, x: int, y: int, z: int):
                 self.x, self.y, self.z = x, y, z
-        assert str(Point(1, 2, 3)) == "Point(x=1, y=2, z=3)"
-        assert repr(Point(x=3, y=4, z=5)) == "Point(x=3, y=4, z=5)"
+        assert str(Point(1, 2, 3)) == "Point(x=1, y=2, z=3)"  # pyright: ignore
+        assert repr(Point(x=3, y=4, z=5)) == "Point(x=3, y=4, z=5)"  # pyright: ignore
 
     def test_argument_with_a_default(self):
         from src.reprtools.reprtools import auto_repr
@@ -143,7 +143,7 @@ class TestFullAutoRepr:
             def __init__(self, name: str, color: str = "purple"):
                 self.name = name
                 self.color = color
-        assert str(Thing("duck")) == "Thing(name='duck', color='purple')"
+        assert str(Thing("duck")) == "Thing(name='duck', color='purple')"  # pyright: ignore
 
     def test_with_property(self):
         from src.reprtools.reprtools import auto_repr
@@ -159,8 +159,8 @@ class TestFullAutoRepr:
             def balance(self):
                 return self._balance
 
-        assert str(BankAccount()) == "BankAccount(balance=0)"
-        assert str(BankAccount(5)) == "BankAccount(balance=5)"
+        assert str(BankAccount()) == "BankAccount(balance=0)"  # pyright: ignore
+        assert str(BankAccount(5)) == "BankAccount(balance=5)"  # pyright: ignore
 
     def test_argument_without_an_attribute(self):
         from src.reprtools.reprtools import auto_repr
@@ -172,10 +172,10 @@ class TestFullAutoRepr:
                 self.balance = opening_balance
 
         with pytest.raises(TypeError):
-            str(BankAccount(10))
+            str(BankAccount(10))  # pyright: ignore
 
         with pytest.raises(TypeError):
-            repr(BankAccount(10))
+            repr(BankAccount(10))  # pyright: ignore
 
     def test_default_argument_without_an_attribute(self):
         from src.reprtools.reprtools import auto_repr
@@ -190,5 +190,5 @@ class TestFullAutoRepr:
             def balance(self):
                 return self._balance
 
-        assert str(BankAccount(custom_id=10)) == "BankAccount(balance=0)"
-        assert str(BankAccount(5)) == "BankAccount(balance=5)"
+        assert str(BankAccount(custom_id=10)) == "BankAccount(balance=0)"  # pyright: ignore
+        assert str(BankAccount(5)) == "BankAccount(balance=5)"  # pyright: ignore
