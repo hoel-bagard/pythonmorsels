@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import unicodedata
 from collections import UserString
 from typing import TypeVar
@@ -8,40 +10,40 @@ T = TypeVar("T")
 
 class FuzzyString(UserString):
     @staticmethod
-    def _preprocess_str(string: str | "FuzzyString") -> str:
+    def _preprocess_str(string: str | FuzzyString) -> str:
         return unicodedata.normalize("NFKD", str(string.casefold()))
 
-    def __eq__(self, other: str | "FuzzyString" | object) -> bool:
+    def __eq__(self, other: str | FuzzyString | object) -> bool:
         if isinstance(other, (str, FuzzyString)):
             return self._preprocess_str(self.data) == self._preprocess_str(other)
         return NotImplemented
 
-    def __lt__(self, other: str | "FuzzyString" | object) -> bool:
+    def __lt__(self, other: str | FuzzyString | object) -> bool:
         if isinstance(other, (str, FuzzyString)):
             return self._preprocess_str(self.data) < self._preprocess_str(other)
         return NotImplemented
 
-    def __gt__(self, other: str | "FuzzyString" | object) -> bool:
+    def __gt__(self, other: str | FuzzyString | object) -> bool:
         if isinstance(other, (str, FuzzyString)):
             return self._preprocess_str(self.data) > self._preprocess_str(other)
         return NotImplemented
 
-    def __ge__(self, other: str | "FuzzyString" | object) -> bool:
+    def __ge__(self, other: str | FuzzyString | object) -> bool:
         if isinstance(other, (str, FuzzyString)):
             return self._preprocess_str(self.data) >= self._preprocess_str(other)
         return NotImplemented
 
-    def __le__(self, other: str | "FuzzyString" | object) -> bool:
+    def __le__(self, other: str | FuzzyString | object) -> bool:
         if isinstance(other, (str, FuzzyString)):
             return self._preprocess_str(self.data) <= self._preprocess_str(other)
         return NotImplemented
 
-    def __add__(self, other: str | "FuzzyString" | object) -> "FuzzyString":
+    def __add__(self, other: str | FuzzyString | object) -> FuzzyString:
         if isinstance(other, (str, FuzzyString)):
             return FuzzyString(self.data + other)
         return NotImplemented
 
-    def __contains__(self, other: str | "FuzzyString" | object) -> bool:
+    def __contains__(self, other: str | FuzzyString | object) -> bool:
         if isinstance(other, (str, FuzzyString)):
             return str(self._preprocess_str(other)) in self._preprocess_str(self.data)
         return NotImplemented
