@@ -1,6 +1,7 @@
+from __future__ import annotations
+
 import math
-from collections.abc import Iterable
-from typing import Optional
+from typing import Iterable, Optional
 
 
 class float_range(Iterable[float]):  # noqa: N801
@@ -13,7 +14,7 @@ class float_range(Iterable[float]):  # noqa: N801
         """Return item at given location, even if out of bounds."""
         return self.start + self.step*index
 
-    def __getitem__(self, key: int | slice) -> float | "float_range":
+    def __getitem__(self, key: int | slice) -> float | float_range:
         if isinstance(key, slice):
             start, stop, step = key.indices(len(self))
             return float_range(self._item(start), self._item(stop), self.step * step)
@@ -34,6 +35,12 @@ class float_range(Iterable[float]):  # noqa: N801
                     and self[-1] == other[-1]
                     and len(self) == len(other))
         return NotImplemented
+
+    # This is to be able to type the class as Iterable[float].
+    # If one do not care about type checking, then it is not required.
+    def __iter__(self):
+        for i in range(len(self)):
+            yield self[i]
 
     def __repr__(self) -> str:
         return f"{type(self).__name__}({self.start}, {self.stop}, {self.step})"
