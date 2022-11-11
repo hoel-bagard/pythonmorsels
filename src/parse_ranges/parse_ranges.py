@@ -5,8 +5,7 @@ def parse_ranges(ranges: str) -> Iterator[int]:
     for interval in ranges.split(","):
         start, *stop = interval.split("-")
         stop = stop[0] if stop and ">" not in stop[0] else start
-        for number in range(int(start), int(stop)+1):
-            yield number
+        yield from range(int(start), int(stop)+1)
 
 
 def assert_equal(res: object, expected_res: object):
