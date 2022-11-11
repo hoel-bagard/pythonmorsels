@@ -31,19 +31,19 @@ def test_return_iterator():
     assert next(numbers) == 100
 
 
-@pytest.mark.bonus1
+@pytest.mark.bonus2
 @pytest.mark.parametrize("str_ranges, expected_res", [
-    ("1,  4-4, 8-10", [1, 4, 8, 9, 10]),
+    ("1, 4-4, 8-10", [1, 4, 8, 9, 10]),
     ("0,4-8,20,43-45", [0, 4, 5, 6, 7, 8, 20, 43, 44, 45])
 ])
 def test_with_individual_numbers(str_ranges: str, expected_res: list[int]):
     assert list(parse_ranges(str_ranges)) == expected_res
 
 
-# # To test bonus 3, comment out the next line
-# @unittest.expectedFailure
-# def test_ignore_arrows(self):
-#     assert
-#         list(parse_ranges("0, 4-8, 20->exit, 43-45")),
-#         [0, 4, 5, 6, 7, 8, 20, 43, 44, 45],
-#     )
+@pytest.mark.bonus2
+@pytest.mark.parametrize("str_ranges, expected_res", [
+    ("1, 4->4, 8-10", [1, 4, 8, 9, 10]),
+    ("0,4-8,20->exit,43-45", [0, 4, 5, 6, 7, 8, 20, 43, 44, 45])
+])
+def test_ignore_arrows(str_ranges: str, expected_res: list[int]):
+    assert list(parse_ranges(str_ranges)) == expected_res

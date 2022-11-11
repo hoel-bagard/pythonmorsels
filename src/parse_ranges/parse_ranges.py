@@ -4,8 +4,7 @@ from collections.abc import Iterator
 def parse_ranges(ranges: str) -> Iterator[int]:
     for interval in ranges.split(","):
         start, *stop = interval.split("-")
-        stop = stop[0] if stop else start
-        # result.extend(range(int(start), int(stop)+1))
+        stop = stop[0] if stop and ">" not in stop[0] else start
         for number in range(int(start), int(stop)+1):
             yield number
 
@@ -29,6 +28,11 @@ def main():
     # Bonus 2
     print("Bonus 2")
     assert_equal(list(parse_ranges("0,4-8,20,43-45")), [0, 4, 5, 6, 7, 8, 20, 43, 44, 45])
+
+    # Bonus 3
+    print("Bonus 3")
+    assert_equal(list(parse_ranges("0, 4-8, 20->exit, 43-45")), [0, 4, 5, 6, 7, 8, 20, 43, 44, 45])
+
     print("Passed all tests.")
 
 
