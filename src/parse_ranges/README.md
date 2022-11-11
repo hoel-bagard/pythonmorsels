@@ -26,7 +26,7 @@ Your function should work like this:
 In the examples above the functions return lists of numbers. Your function can return any iterable of numbers that you"d like though.
 
 #### Bonus 1
-For the first bonus, I"d like you to return an iterator (like a generator, not a list) from your function.
+For the first bonus, I'd like you to return an iterator (like a generator, not a list) from your function.
 You could make a generator function to do this or you could return a generator expression.
 
 ```python
@@ -41,7 +41,7 @@ You could make a generator function to do this or you could return a generator e
 For the second bonus, I'd like you to allow individual numbers as well as pairs of two numbers:
 
 ```python
->>> list(parse_ranges('0,4-8,20,43-45'))
+>>> list(parse_ranges("0,4-8,20,43-45"))
 [0, 4, 5, 6, 7, 8, 20, 43, 44, 45]
 ```
 

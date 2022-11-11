@@ -31,13 +31,14 @@ def test_return_iterator():
     assert next(numbers) == 100
 
 
-# # To test bonus 2, comment out the next line
-# @unittest.expectedFailure
-# def test_with_individual_numbers(self):
-#     assert
-#         list(parse_ranges("0,4-8,20,43-45")),
-#         [0, 4, 5, 6, 7, 8, 20, 43, 44, 45],
-#     )
+@pytest.mark.bonus1
+@pytest.mark.parametrize("str_ranges, expected_res", [
+    ("1,  4-4, 8-10", [1, 4, 8, 9, 10]),
+    ("0,4-8,20,43-45", [0, 4, 5, 6, 7, 8, 20, 43, 44, 45])
+])
+def test_with_individual_numbers(str_ranges: str, expected_res: list[int]):
+    assert list(parse_ranges(str_ranges)) == expected_res
+
 
 # # To test bonus 3, comment out the next line
 # @unittest.expectedFailure
