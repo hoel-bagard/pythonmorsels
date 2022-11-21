@@ -26,11 +26,11 @@ class Timer:
             return self.func(*args, **kwargs)  # pyright: ignore [reportOptionalCall]
 
     @property
-    def max(self):
+    def max(self):  # noqa: A003
         return max(self.runs)
 
     @property
-    def min(self):
+    def min(self):  # noqa: A003
         return min(self.runs)
 
     @property

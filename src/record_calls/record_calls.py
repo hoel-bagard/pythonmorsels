@@ -18,7 +18,7 @@ class Call:
     exception: Optional[BaseException] = None
 
 
-# class record_calls:  # noqa: N801
+# class record_calls:
 #     def __init__(self, func: Callable[..., Any]):
 #         functools.update_wrapper(self, func)
 #         self.func = func

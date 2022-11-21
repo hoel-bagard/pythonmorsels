@@ -14,11 +14,11 @@ def format_arguments(*args: object, **kwargs: object) -> str:
 
 
 def make_repr(args: Optional[list[str]] = None, kwargs: Optional[list[str]] = None) -> Callable[[object], str]:
-    def repr(self: object) -> str:
+    def repr_method(self: object) -> str:
         args_v = tuple(getattr(self, arg) for arg in args) if args is not None else ()
         kwargs_v = {key: getattr(self, key) for key in kwargs} if kwargs else {}
         return f"{type(self).__name__}({format_arguments(*args_v, **kwargs_v)})"
-    return repr
+    return repr_method
 
 
 def auto_repr(cls: Optional[Callable[_P, _R]] = None,
@@ -37,7 +37,7 @@ def auto_repr(cls: Optional[Callable[_P, _R]] = None,
         for name, param in sig.parameters.items():
             kwargs_sign[name] = param.default != inspect.Parameter.empty
 
-        def repr(self: Callable[_P, _R]) -> str:
+        def repr_method(self: Callable[_P, _R]) -> str:
             kwargs_v = {}
             for key, is_optional in kwargs_sign.items():
                 try:
@@ -49,7 +49,7 @@ def auto_repr(cls: Optional[Callable[_P, _R]] = None,
                 kwargs_v[key] = value
             return f"{type(self).__name__}({format_arguments(*(), **kwargs_v)})"
 
-        cls.__repr__ = repr
+        cls.__repr__ = repr_method
         return cls
 
 
