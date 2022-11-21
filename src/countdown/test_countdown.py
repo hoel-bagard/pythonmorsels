@@ -333,8 +333,7 @@ def run_program(arguments: str, raises: Type[Exception] = DummyError) -> str:
     assert all(isinstance(arg, str) for arg in args)
     try:
         sys.argv = [python_file_path] + args
-        with redirect_stdout(StringIO()) as output, \
-             redirect_stderr(output):
+        with redirect_stdout(StringIO()) as output, redirect_stderr(output):
             try:
                 # Replace the main module.
                 # (remove this file as the main module, and set the script from the arguments as main).

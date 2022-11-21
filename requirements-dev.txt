@@ -9,3 +9,4 @@ flake8-bugbear
 flake8-quotes
 flake8-comprehensions
 flake8-noqa
+flake8-broken-line
