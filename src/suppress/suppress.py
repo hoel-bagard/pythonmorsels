@@ -52,7 +52,7 @@ def main() -> None:
     # Main exercise
     with suppress(NameError):
         print("Hi!")
-        print("It's nice to meet you,", name)  # type: ignore  # noqa
+        print("It's nice to meet you,", name)  # type: ignore  # noqa: F821
         print("Goodbye!")
 
     # with suppress(TypeError):

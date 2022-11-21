@@ -64,7 +64,7 @@ class PercentToGradeTests(unittest.TestCase):
         self.assertEqual(percent_to_grade(64, suffix=True), "D")
         self.assertEqual(percent_to_grade(59, suffix=True), "F")
         self.assertEqual(percent_to_grade(0, suffix=True), "F")
-        with self.assertRaises(Exception):  # noqa
+        with self.assertRaises(Exception):  # noqa: B017
             percent_to_grade(0, True)  # pyright: ignore  # suffix is a keyword-only argument
 
     # To test bonus 2, comment out the next line
