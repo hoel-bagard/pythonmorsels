@@ -1,4 +1,4 @@
-def percent_to_grade(in_percentage: float, *, suffix: bool = False, round: bool = False) -> str:
+def percent_to_grade(in_percentage: float, *, suffix: bool = False, round: bool = False) -> str:  # noqa: A002
     """Convert a percentage to a grade by using a specific flavor of the A-F grading system used in the US."""
     grades = ["F"] + [grade + suf for grade in ["D", "C", "B", "A"] for suf in (("-", "", "+") if suffix else ("", ))]
     thresholds = [57 + 3*i + i//3 for i in range(1, len(grades))] if suffix else range(60, 91, 10)

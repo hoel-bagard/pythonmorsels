@@ -26,9 +26,11 @@ repos:
           - flake8-bugbear
           - flake8-comprehensions
           - flake8-docstrings
-          # - flake8-quotes
+          - flake8-builtins
+          - flake8-quotes
           - pep8-naming
           - flake8-import-order
+          - flake8-noqa
           # - flake8-pyprojecttoml @ git+https://github.com/tlambert03/flake8-pyprojecttoml.git@main
 
   - repo: https://github.com/RobertCraigie/pyright-python

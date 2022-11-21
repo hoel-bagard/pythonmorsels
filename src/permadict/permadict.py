@@ -60,7 +60,7 @@ def main():
     try:
         locations["David"] = "Amsterdam"
         raise Exception("Should have raised a KeyError but did not.")
-    except KeyError:  # noqa
+    except KeyError:
         pass
 
     # Bonus 1
