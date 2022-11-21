@@ -37,7 +37,7 @@ class DeepFlattenTests(unittest.TestCase):
         self.assert_iterable_equal(deep_flatten([(1, 2), deque([3])]), [1, 2, 3])
         self.assert_iterable_equal(
             deep_flatten(iter([n]) for n in [1, 2, 3]),
-            [1, 2, 3]
+            [1, 2, 3],
         )
 
     # To test bonus 2, comment out the next line

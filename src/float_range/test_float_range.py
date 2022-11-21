@@ -19,7 +19,7 @@ def test_has_iterability(start: float, stop: float, step: float, res: list[float
 
 @pytest.mark.parametrize("start, stop, res",
                          [(1, 6, [1, 2, 3, 4, 5]),
-                          (0.5, 6, [0.5, 1.5, 2.5, 3.5, 4.5, 5.5])
+                          (0.5, 6, [0.5, 1.5, 2.5, 3.5, 4.5, 5.5]),
                           ])
 def test_optional_step(start: float, stop: float, res: list[float]):
     assert list(float_range(start, stop)) == res
@@ -27,7 +27,7 @@ def test_optional_step(start: float, stop: float, res: list[float]):
 
 @pytest.mark.parametrize("stop, res",
                          [(6, [0, 1, 2, 3, 4, 5]),
-                          (4.2, [0, 1, 2, 3, 4])
+                          (4.2, [0, 1, 2, 3, 4]),
                           ])
 def test_optional_start(stop: float, res: list[float]):
     assert list(float_range(0, stop)) == res
@@ -41,7 +41,7 @@ def test_string_representation():
 
 @pytest.mark.parametrize("start, stop, step, res",
                          [(1, 6, 0.5, [1, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5]),
-                          (1, 5.6, 0.5, [1, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5])
+                          (1, 5.6, 0.5, [1, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5]),
                           ])
 def test_fractional_step_size(start: float, stop: float, step: float, res: list[float]):
     assert list(float_range(start, stop, step)) == res

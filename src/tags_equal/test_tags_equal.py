@@ -65,7 +65,7 @@ class TestBonus1:
     @pytest.mark.parametrize("tag1, tag2, is_equal", [
         ("<input type=hidden type=input>", "<input type=hidden>", True),
         ("<img type=input type=hidden>", "<Img type=hidden>", False),
-        ("<input TYPE=hidden type=input>", "<input type=hidden>", True)
+        ("<input TYPE=hidden type=input>", "<input type=hidden>", True),
     ])
     def test_ignore_duplicate_keys(self, tag1: str, tag2: str, is_equal: bool):
         assert tags_equal(tag1, tag2) == is_equal
@@ -76,7 +76,7 @@ class TestBonus2:
     @pytest.mark.parametrize("tag1, tag2, is_equal", [
         ("<input type=checkbox checked>", "<input checked type=checkbox>", True),
         ("<img type=checkbox checked>", "<Img type=checkbox>", False),
-        ("<input type=checkbox checked>", "<input type=checkbox CHECKED>", True)
+        ("<input type=checkbox checked>", "<input type=checkbox CHECKED>", True),
     ])
     def test_valueless_keys(self, tag1: str, tag2: str, is_equal: bool):
         assert tags_equal(tag1, tag2) == is_equal
@@ -92,7 +92,7 @@ class TestBonus3:
          True),
         ("<input type=text value='Hi there' placeholder='Hi friend'>",
          "<input type=text value='Hi friend' placeholder='Hi there'>",
-         False)
+         False),
     ])
     def test_quotes(self, tag1: str, tag2: str, is_equal: bool):
         assert tags_equal(tag1, tag2) == is_equal

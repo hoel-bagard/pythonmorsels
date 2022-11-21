@@ -52,7 +52,7 @@ def test_order_maintained(input_iter: Iterable[T], expected_res: list[T]):
 
 
 @pytest.mark.parametrize("input_iter, expected_res", [
-    ((n**2 for n in [1, 2, 3]), [1, 4, 9])
+    ((n**2 for n in [1, 2, 3]), [1, 4, 9]),
 ])
 def test_accepts_iterator(input_iter: Iterable[T], expected_res: list[T]):
     assert list(uniques_only(input_iter)) == expected_res
@@ -76,7 +76,7 @@ class TestBonus1:
 @pytest.mark.bonus2
 class TestBonus2:
     @pytest.mark.parametrize("input_iter, expected_res", [
-        ([[1, 2], [3], [1], [3]], [[1, 2], [3], [1]])
+        ([[1, 2], [3], [1], [3]], [[1, 2], [3], [1]]),
     ])
     def test_accepts_nonhashable_types(self, input_iter: Iterable[T], expected_res: list[T]):
         assert list(uniques_only(input_iter)) == expected_res
@@ -96,12 +96,12 @@ class TestBonus3:
             "list(uniques_only(hashables))",
             number=3,
             repeat=3,
-            globals=variables
+            globals=variables,
         ))
         unhashable_time = min(repeat(
             "list(uniques_only(unhashables))",
             number=3,
             repeat=3,
-            globals=variables
+            globals=variables,
         ))
         assert hashable_time*3 < unhashable_time
